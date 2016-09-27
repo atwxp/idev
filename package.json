@@ -1,0 +1,40 @@
+{
+  "name": "idev",
+  "version": "0.0.1",
+  "description": "a mobile develop dev tool",
+  "bin": {
+    "idev": "./bin/cli"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atwxp/idev.git"
+  },
+  "port": 8888,
+  "ports": [
+    "uiport"
+  ],
+  "keywords": [
+    "dev tool",
+    "deugger",
+    "http proxy"
+  ],
+  "author": "wxp201013@163.com",
+  "license": "ISC",
+  "preferGlobal": true,
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "commander": "^2.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.22.0",
+    "http-proxy": "^1.15.1",
+    "socket.io": "^1.4.8",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.1"
+  },
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}

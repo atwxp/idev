@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var pkgConfig = require('../package.json');
+
+var started = false;
+
+function getOptions() {
+    var obj = {};
+
+    Object.keys(program).forEach(function (name) {
+        if (program.optionFor('--' + name)) {
+            obj[name] = program[name];
+        }
+    });
+
+    return obj;
+}
+
+program
+    .version(pkgConfig.version)
+    .usage('<Command> [Options]');
+
+program
+    .option('-p, --port [port]', pkgConfig.port + ' by default')
+    .option('--debug', 'debug webui');
+
+program
+    .command('help')
+    .description('Display help information')
+    .action(function () {
+        started = true;
+        program.help();
+    });
+program
+    .command('start')
+    .description('start debugger')
+    .action(function () {
+        started = true;
+    });
+
+program.parse(process.argv);
+
+if (!started) {
+    console.log('type [idev start] to debug.');
+    return;
+}
+
+// entry
+require('../index')(getOptions());
