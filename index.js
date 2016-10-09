@@ -1,5 +1,8 @@
-module.exports = function (options) {
-    require('./lib/config').extend(options);
+import lib from './lib';
+import config from './lib/config';
 
-    require('./lib');
+export default function (options) {
+    config.extend(options);
+
+    lib.start();
 };

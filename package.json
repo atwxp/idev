@@ -5,6 +5,7 @@
   "bin": {
     "idev": "./bin/cli"
   },
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +17,12 @@
   "ports": [
     "uiport"
   ],
+  "host": "127.0.0.1",
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "keywords": [
     "dev tool",
     "deugger",
@@ -25,16 +32,29 @@
   "license": "ISC",
   "preferGlobal": true,
   "devDependencies": {
-    "body-parser": "^1.15.2",
-    "commander": "^2.9.0",
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-register": "^6.16.3",
+    "cross-env": "^3.1.2",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "fecs-loader": "^0.3.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
-    "http-proxy": "^1.15.1",
-    "socket.io": "^1.4.8",
+    "json-loader": "^0.5.4",
+    "vue-style-loader": "^1.0.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.1"
   },
   "dependencies": {
-    "express": "^4.14.0"
+    "body-parser": "^1.15.2",
+    "commander": "^2.9.0",
+    "express": "^4.14.0",
+    "http-proxy": "^1.15.1",
+    "socket.io": "^1.4.8",
+    "vue": "^1.0.28",
+    "vue-resource": "^1.0.3",
+    "vue-router": "^0.7.13"
   }
 }
