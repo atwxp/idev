@@ -7,6 +7,10 @@
   },
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf output lib/webui/output",
+    "build": "npm run clean & webpack --config lib/webui/webpack.config.babel.js --colors",
+    "pub": "cross-env NODE_ENV=production npm run build",
+    "lint": "fecs -v && fecs lib ./*.js --type=js --rule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +25,9 @@
   "babel": {
     "presets": [
       "es2015"
+    ],
+    "plugins": [
+      "transform-runtime"
     ]
   },
   "keywords": [
@@ -34,15 +41,22 @@
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-register": "^6.16.3",
     "cross-env": "^3.1.2",
+    "css-loader": "^0.25.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "fecs-loader": "^0.3.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.22.0",
     "json-loader": "^0.5.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "style-loader": "^0.13.1",
+    "vue-loader": "^9.5.1",
+    "vue-router": "^2.0.0",
     "vue-style-loader": "^1.0.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.1"
@@ -53,8 +67,8 @@
     "express": "^4.14.0",
     "http-proxy": "^1.15.1",
     "socket.io": "^1.4.8",
-    "vue": "^1.0.28",
+    "vue": "^2.0.1",
     "vue-resource": "^1.0.3",
-    "vue-router": "^0.7.13"
+    "vue-router": "^2.0.0"
   }
 }

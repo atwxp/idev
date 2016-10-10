@@ -8,7 +8,7 @@ let started = false;
 function getOptions() {
     let obj = {};
 
-    Object.keys(program).forEach(function (name) {
+    Object.keys(program).forEach((name) => {
         if (program.optionFor('--' + name)) {
             obj[name] = program[name];
         }
