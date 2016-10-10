@@ -1,8 +1,6 @@
 <template>
     <div class="main">
-        <div class="header">
-            <tool-bar></tool-bar>
-        </div>
+        <tool-bar></tool-bar>
 
         <div class="content">
             <div class="req-area"></div>
