@@ -1,0 +1,22 @@
+.toolbar {
+    > ul {
+        display: flex;
+    }
+
+    height: 30px;
+    line-height: 30px;
+
+    background: rgb(19, 110, 150);
+    color: #fff;
+
+    li {
+        padding: 0 10px;
+        cursor: pointer;
+
+        &.active,
+        &:hover {
+            text-decoration: underline;
+            color: #40f366;
+        }
+    }
+}

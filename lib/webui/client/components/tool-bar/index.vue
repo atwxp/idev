@@ -1,15 +1,20 @@
 <template>
     <div class="toolbar">
-    hello toolbar
+        <ul>
+            <li v-for="m in tool">{{m | camelCase}}</li>
+        </ul>
     </div>
 </template>
 
 <script>
-    export default {
-        data () {
-            return {}
+
+export default {
+    data () {
+        return {
+            tool: ['edit', 'plugins', 'replay', 'https', 'weinre', 'help', 'about', 'online']
         }
     }
+};
 </script>
 
-<style lang="less" src="./index.less"></style>
+<style scoped lang="less" src="./index.less"></style>

@@ -2,29 +2,32 @@
     <div class="main">
         <tool-bar></tool-bar>
 
-        <div class="content">
-            <div class="req-area"></div>
+        <req-area></req-area>
 
-            <div class="status-area"></div>
-        </div>
+        <divider-bar></divider-bar>
 
-        <div class="footer"></div>
+        <status-area></status-area>
     </div>
 </template>
 
 <script>
-
 import toolBar from './components/tool-bar';
+import reqArea from './components/req-area';
+import dividerBar from './components/divider-bar';
+import statusArea from './components/status-area';
 
 export default {
     data () {
         return {};
     },
+
     components: {
-        'tool-bar': toolBar
+        'tool-bar': toolBar,
+        'req-area': reqArea,
+        'divider-bar': dividerBar,
+        'status-area': statusArea
     }
 };
-
 </script>
 
 <style lang="less" src="./index.less"></style>
