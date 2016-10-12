@@ -24,7 +24,7 @@ export default {
                 {
                     view: 'inspector',
                     text: 'inspector',
-                    isActive: false
+                    isActive: true
                 },
                 {
                     view: 'responder',
@@ -39,11 +39,11 @@ export default {
                 {
                     view: 'wizard',
                     text: 'text-wizard',
-                    isActive: true
+                    isActive: false
                 }
             ],
 
-            currentView: 'wizard'
+            currentView: 'inspector'
         }
     },
 
@@ -59,10 +59,10 @@ export default {
     },
 
     components: {
-        'inspector': inspector,
-        'responder': responder,
-        'composer': composer,
-        'wizard': wizard
+        inspector,
+        responder,
+        composer,
+        wizard
     }
 };
 </script>

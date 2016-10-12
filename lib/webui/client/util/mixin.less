@@ -4,3 +4,20 @@
     -webkit-user-select: @select;
     user-select: @select;
 }
+
+.box-sizing(@border-box: border-box) {
+    -webkit-box-sizing: @border-box;
+    box-sizing: @border-box;
+}
+
+.single-ling() {
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flex() {
+    display: -webkit-flex;
+    display: flex;
+}

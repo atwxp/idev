@@ -1,26 +1,25 @@
+@import '../../util/mixin.less';
+
 .wizard {
-    margin: 20px auto;
+    margin: 0 auto;
+    padding: 20px 0;
     width: 50%;
 
-    .raw-text {
+    .raw-text,
+    .result-text {
+        display: block;
         width: 100%;
         height: 100px;
     }
 
     .enctype {
-        overflow: hidden;
+        .flex();
         margin: 10px 0;
+        height: 20px;
+        line-height: 20px;
+
         li {
-            float: left;
             margin-right: 10px;
-
-            input {
-                vertical-align: middle;
-            }
-
-            label {
-                vertical-align: middle;
-            }
         }
     }
 
@@ -28,11 +27,13 @@
         margin: 10px 0;
 
         > .btn {
+            line-height: 18px;
             margin-right: 10px;
         }
 
         .convert {
             background-color: #5bc0de;
+
             &:hover {
                 background-color: #2aabd2;
             }
@@ -40,14 +41,10 @@
 
         .clear {
             background-color: #e38d13;
+
             &:hover {
                 background-color: #eb9316;
             }
         }
-    }
-
-    .result-text {
-        width: 100%;
-        height: 100px;
     }
 }

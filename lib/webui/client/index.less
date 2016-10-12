@@ -1,3 +1,5 @@
+@import './util/mixin.less';
+
 html, body,
 ul, ol,
 p,
@@ -41,22 +43,20 @@ body {
 }
 
 .form-control {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
     outline: none;
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #fff;
     border-radius: 4px;
+    .box-sizing();
     color: #555;
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
-
-.form-control:focus {
-    border-color: #66afe9;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    &:focus {
+        border-color: #66afe9;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    }
 }
 
 .btn {
@@ -68,16 +68,12 @@ body {
     font-weight: 400;
     color: #fff;
     cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+
+    .user-select();
+    .box-sizing();
 }
 
 #app {
     position: relative;
     min-width: 1020px;
 }
-

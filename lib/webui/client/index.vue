@@ -4,17 +4,19 @@
 
         <req-area></req-area>
 
-        <divider-bar></divider-bar>
-
         <status-area></status-area>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import toolBar from './components/tool-bar';
 import reqArea from './components/req-area';
-import dividerBar from './components/divider-bar';
 import statusArea from './components/status-area';
+import socketClient from 'socket.io-client';
+
+// global data bus
+window.bus = new Vue()
 
 export default {
     data () {
@@ -22,10 +24,22 @@ export default {
     },
 
     components: {
-        'tool-bar': toolBar,
-        'req-area': reqArea,
-        'divider-bar': dividerBar,
-        'status-area': statusArea
+        toolBar,
+        reqArea,
+        statusArea
+    },
+
+    created: function () {
+        var url = 'http://' + location.hostname + ':8889';
+
+        const socket = socketClient(url);
+
+        socket.on('reqArrival', function (data) {
+            console.log(data);
+            // window.bus.$emit('reqArrival', data);
+        });
+
+        socket.emit('join');
     }
 };
 </script>
