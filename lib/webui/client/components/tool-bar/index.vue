@@ -11,8 +11,12 @@
 export default {
     data () {
         return {
-            tool: ['edit', 'plugins', 'replay', 'https', 'weinre', 'help', 'about', 'online']
+            tool: ['clear', 'replay', 'https', 'weinre', 'online']
         }
+    },
+
+    created: function () {
+
     }
 };
 </script>

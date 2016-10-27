@@ -1,0 +1,25 @@
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, .5);
+
+    .modal-content {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transfrom: translate(-50%, -50%);
+        background: #eee;
+        border-radius: 6px;
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}

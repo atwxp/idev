@@ -10,13 +10,14 @@
 
 <script>
 import Vue from 'vue';
+import socketClient from 'socket.io-client';
+
 import toolBar from './components/tool-bar';
 import reqArea from './components/req-area';
 import statusArea from './components/status-area';
-import socketClient from 'socket.io-client';
 
 // global data bus
-window.bus = new Vue()
+window.bus = new Vue();
 
 export default {
     data () {
@@ -34,12 +35,16 @@ export default {
 
         const socket = socketClient(url);
 
-        socket.on('reqArrival', function (data) {
+        // 监听到请求后更新到 webui 的 req-area, status-area
+        socket.on('reqArrival', (data) => {
             console.log(data);
             // window.bus.$emit('reqArrival', data);
         });
 
-        socket.emit('join');
+        // 获取 IP 端口网络信息，通知到 tool-bar 的 online 选项
+        socket.on('join', (data) => {
+            // window.bus.$emit('online', data);
+        });
     }
 };
 </script>

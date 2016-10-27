@@ -8,9 +8,9 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf output lib/webui/output",
-    "build": "npm run clean & webpack --config lib/webui/webpack.config.babel.js --colors",
+    "build": "npm run clean && webpack --config lib/webui/webpack.config.babel.js --colors",
     "pub": "cross-env NODE_ENV=production npm run build",
-    "lint": "fecs -v && fecs lib ./*.js --type=js --rule",
+    "lint": "fecs -v && fecs ./*.js --type=js --rule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
