@@ -1,7 +1,7 @@
 <template>
 
 <transition name="modal-fade">
-    <div class="modal-content" v-show="showing">
+    <div class="modal-content" :class="cls" v-show="showing">
 
         <div name="modal-header" v-if="title">
             <h4 class="modal-title">{{title}}</h4>
@@ -17,7 +17,7 @@
 
         <div class="modal-footer" v-if="!hideCloseBtn">
             <slot name="footer">
-                <button @click="close">Close</button>
+                <button class="btn" @click="close">关闭</button>
             </slot>
         </div>
     </div>
@@ -33,6 +33,11 @@ export default {
     mixins: [overlayMixin],
 
     props: {
+        cls: {
+            type: String,
+            default: ''
+        },
+
         title: {
             type: String,
             default: ''
@@ -56,11 +61,11 @@ export default {
 
     methods: {
         close () {
-            this.showing = false
+            this.$emit('close')
         },
 
         overlayClick () {
-            this.showing = !this.backdrop
+            this.backdrop && this.close()
         }
     }
 };

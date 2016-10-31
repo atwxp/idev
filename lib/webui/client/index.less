@@ -3,6 +3,7 @@
 html, body,
 ul, ol,
 p,
+h1, h2, h3, h4, h5, h6,
 input, button, select,
 a {
     margin: 0;
@@ -31,8 +32,7 @@ html {
     text-size-adjust: 100%;
 }
 
-html, body,
-#app, .main {
+html, body {
     height: 100%;
 }
 
@@ -43,8 +43,9 @@ body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.main {
+.app {
     position: relative;
+    height: 100%;
     min-width: 1020px;
 }
 
@@ -71,8 +72,7 @@ body {
 
 .btn {
     border: none;
-    height: 35px;
-    padding: 0 10px;
+    padding: 5px 12px;
 
     border-radius: 4px;
     background-color: #13b5b1;

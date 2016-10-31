@@ -1,12 +1,17 @@
 <template>
-    <div class="main">
-        <tool-area v-on:onlineOpen="openOnline"></tool-area>
+    <div class="app">
+        <tool-area></tool-area>
 
         <req-area></req-area>
 
         <status-area></status-area>
 
-        <alert :showing.sync="online.showing" :msg="online.network" type="info"></alert>
+        <modal :showing.sync="onlineModal" cls="online-modal" v-on:close="onlineModal=false">
+            <h5>Hostname: {{network.hostname}}</h5>
+            <h5>Port: {{network.port}}</h5>
+            <h5>IPV4:</h5>
+            <p v-for="ip in network.ipv4">{{ip}}</p>
+        </modal>
     </div>
 </template>
 
@@ -14,12 +19,12 @@
 import Vue from 'vue';
 import socketClient from 'socket.io-client';
 
-import toolArea from 'components/tool-area';
-import reqArea from 'components/req-area';
-import statusArea from 'components/status-area';
+import ToolArea from 'components/tool-area';
+import ReqArea from 'components/req-area';
+import StatusArea from 'components/status-area';
 
-import alert from 'ui/alert';
-import modal from 'ui/modal';
+import Alert from 'ui/alert';
+import Modal from 'ui/modal';
 
 // global data bus
 window.bus = new Vue();
@@ -27,28 +32,23 @@ window.bus = new Vue();
 export default {
     data () {
         return {
-            online: {
-                network: '',
-                showing: false
-            }
+            network: {},
+            onlineModal: false
         }
     },
 
     components: {
-        toolArea,
-        reqArea,
-        statusArea,
-        alert,
-        modal
-    },
-
-    methods: {
-        openOnline () {
-            this.online.showing = true
-        }
+        ToolArea,
+        ReqArea,
+        StatusArea,
+        Alert,
+        Modal
     },
 
     created () {
+        var me = this;
+
+        // todo: replace 8889 too uiport
         var url = 'http://' + location.hostname + ':8889/';
 
         const socket = socketClient(url);
@@ -61,23 +61,11 @@ export default {
 
         // 获取 IP 端口网络信息，通知到 tool-area 的 online 选项
         socket.on('join', (data) => {
-            // todo: format info
-            var str = '';
+            this.network = data;
+        });
 
-            Object.keys(data).forEach((k) => {
-                str += k + ': ';
-
-                if (data[k] instanceof Array) {
-                    data[k].forEach((v) => {
-                        str += v + '<br />'
-                    })
-                }
-                else {
-                    str += data[k] + '<br />'
-                }
-            });
-
-            this.online.network = str;
+        window.bus.$on('openOnline', function (val) {
+            me.onlineModal = val;
         });
     }
 };

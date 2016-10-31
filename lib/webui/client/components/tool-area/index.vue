@@ -1,52 +1,30 @@
 <template>
     <div class="tool-area">
-        <ul @click="clickNav">
-            <li v-for="m in tool">{{m.text | camelCase}}</li>
+        <ul>
+            <li v-for="m in tool" @click="dealClick(m)">{{m | camelCase}}</li>
         </ul>
     </div>
 </template>
 
 <script>
-import util from 'util';
 
 export default {
     data () {
         return {
-            tool: [
-                {
-                    text: 'clear'
-                },
-
-                {
-                    text: 'replay'
-                },
-
-                {
-                    text: 'https'
-                },
-
-                {
-                    text: 'weinre'
-                },
-
-                {
-                    text: 'online'
-                }
-            ]
+            tool: ['clear', 'replay', 'https', 'weinre', 'online']
         }
     },
 
     methods: {
-        openOnline () {
-            this.$emit('onlineOpen');
-        },
+        dealClick (m) {
 
-        clickNav (event) {
-            let target = event.target
+            switch (m) {
+                case 'online':
+                    window.bus.$emit('openOnline', true)
+                    break
 
-            let cb = this['open' + util.capitalize(target.textContent)]
-
-            cb && cb()
+                default:
+            }
         }
     }
 };

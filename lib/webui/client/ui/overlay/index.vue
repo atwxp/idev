@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import util from 'util';
+import util from 'util'
 
 export default {
     props: {
@@ -19,7 +19,8 @@ export default {
 
     data () {
         return {
-            zIndex: util.getZIndex()
+            // zIndex: util.getZIndex()
+            zIndex: 99
         }
     },
 

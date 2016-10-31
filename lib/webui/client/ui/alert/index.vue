@@ -1,10 +1,14 @@
 <template>
-    <modal :showing.sync="showing">
-       <div class="alert-content" :class="{info: type == 'info', warning: type == 'warning', error: type == 'error'}">
+    <modal :showing.sync="showing" :cls="cls" v-on:close="close">
+       <p class="alert-content" :class="{
+            info: type == 'info',
+            warning: type == 'warning',
+            error: type == 'error'
+        }">
             {{msg}}
-        </div>
+        </p>
 
-        <button slot="footer" @click="sure">Sure</button>
+        <button slot="footer" class="btn" @click="sure">确定</button>
     </modal>
 </template>
 
@@ -14,6 +18,11 @@ import modal from 'ui/modal';
 
 export default {
     props: {
+        cls: {
+            type: String,
+            default: ''
+        },
+
         showing: {
             type: Boolean,
             default: false
@@ -27,10 +36,6 @@ export default {
         type: {
             type: String,
             default: '' // 'info/warning/error'
-        },
-
-        onSure: {
-            type: Function
         }
     },
 
@@ -39,15 +44,14 @@ export default {
     },
 
     methods: {
+        close () {
+            this.$emit('close')
+        },
+
         sure () {
-            // http://www.cnblogs.com/kidsitcn/p/5409994.html
-            // anti-pattern this.showing = false
-            // Avoid mutating a prop directly since the value will be overwritten whenever the parent component re-renders
-            this.showing = false
-
-            this.onSure && this.onSure()
-
             this.$emit('sure')
+
+            this.close()
         }
     }
 };
