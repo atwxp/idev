@@ -1,25 +1,25 @@
-.modal {
+@import '../../util/mixin.less';
+
+.modal-content {
     position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    background: rgba(0, 0, 0, .5);
+    left: 50%;
+    top: 50%;
+    width: 300px;
+    padding: 20px;
 
-    .modal-content {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transfrom: translate(-50%, -50%);
-        background: #eee;
-        border-radius: 6px;
-    }
+    .transform(translate(-50%, -50%));
+
+    background-color: #fff;
+    border-radius: 8px;
+
+    .box-shadow(0 2px 8px rgba(0, 0, 0, .33));
+    .transition(all .3s ease);
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
+.modal-fade-enter-active, .modal-fade-leave-active {
+    .transition(opacity .5s);
 }
-.fade-enter, .fade-leave-active {
-  opacity: 0
+
+.modal-fade-enter, .modal-fade-leave-active {
+    opacity: 0;
 }

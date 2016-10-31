@@ -1,7 +1,5 @@
 <template>
-    <div class="req-area">
-
-    </div>
+    <div class="log">log</div>
 </template>
 
 <script>

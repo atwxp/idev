@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import util from '../../util';
+import util from 'util';
 
 export default {
     data () {
@@ -61,7 +61,7 @@ export default {
     },
 
     methods: {
-        convert: function () {
+        convert () {
             let val = this.rawText;
 
             if (!val) {
@@ -73,7 +73,7 @@ export default {
             this.resultText = util[codec](val);
         },
 
-        clear: function () {
+        clear () {
             this.rawText = '';
             this.resultText = '';
         }
@@ -81,4 +81,4 @@ export default {
 }
 </script>
 
-<style scoped lang="less" src="./index.less"></style>
+<style lang="less" src="./index.less"></style>

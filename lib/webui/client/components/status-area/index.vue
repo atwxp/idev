@@ -5,17 +5,21 @@
         </ul>
 
         <div class="status-content">
-            <component :is="currentView"></component>
+            <keep-alive>
+                <component :is="currentView"></component>
+            </keep-alive>
         </div>
     </div>
 </template>
 
 <script>
-import util from '../../util';
-import wizard from '../wizard';
-import inspector from '../inspector';
-import responder from '../responder';
-import composer from '../composer';
+import util from 'util';
+
+import inspector from 'components/inspector';
+import responder from 'components/responder';
+import composer from 'components/composer';
+import wizard from 'components/wizard';
+import log from 'components/log';
 
 export default {
     data () {
@@ -40,6 +44,11 @@ export default {
                     view: 'wizard',
                     text: 'text-wizard',
                     isActive: false
+                },
+                {
+                    view: 'log',
+                    text: 'log',
+                    isActive: false
                 }
             ],
 
@@ -48,7 +57,7 @@ export default {
     },
 
     methods: {
-        togglePanel: function (index) {
+        togglePanel (index) {
 
             this.tab.forEach((v, i) => {
                 v.isActive = i === index;
@@ -62,7 +71,8 @@ export default {
         inspector,
         responder,
         composer,
-        wizard
+        wizard,
+        log
     }
 };
 </script>
