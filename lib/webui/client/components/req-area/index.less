@@ -1,3 +1,95 @@
-.req-area {
+@import '../../util/mixin.less';
 
+@navH: 30px;
+@reqNavH: 25px;
+@reqNavW: 50%;
+
+.req-area {
+    position: absolute;
+    top: @navH;
+    bottom: 0;
+    left: 0;
+    width: @reqNavW;
+
+    .req-bar {
+        position: fixed;
+        left: 0;
+        top: @navH;
+        height: @reqNavH;
+        width: @reqNavW;
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+
+        font-size: 13px;
+        line-height: @reqNavH;
+
+        .flex();
+
+        > li {
+            flex: 1 1 auto;
+            .box-sizing(border-box);
+            padding: 0 5px;
+        }
+    }
+
+    .req-content {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .req-list {
+        margin-top: @reqNavH;
+        font-size: 13px;
+        color: #666;
+
+        > li {
+            .flex();
+            line-height: 24px;
+
+            > span {
+                display: block;
+                flex: 1 1 auto;
+
+                .box-sizing(border-box);
+
+                padding: 0 5px;
+                .single-line();
+            }
+
+            &.selected {
+                background: #13b5b1;
+                color: #fff;
+            }
+        }
+    }
+
+    .order {
+        width: 7.5%;
+    }
+
+    .status {
+        width: 7.5%;
+        text-align: center;
+    }
+
+    .protocol {
+        width: 10%;
+    }
+
+    .host {
+        width: 20%;
+        text-align: right;
+    }
+
+    .url {
+        width: 30%;
+    }
+
+    .content-type {
+        width: 15%;
+    }
+
+    .server-ip {
+        width: 10%;
+    }
 }

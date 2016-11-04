@@ -26,6 +26,8 @@ import StatusArea from 'components/status-area';
 import Alert from 'ui/alert';
 import Modal from 'ui/modal';
 
+import { mapActions } from 'vuex'
+
 // global data bus
 window.bus = new Vue();
 
@@ -55,8 +57,7 @@ export default {
 
         // 监听到请求后更新到 webui 的 req-area, status-area
         socket.on('reqArrival', (data) => {
-            console.log(data);
-            // window.bus.$emit('reqArrival', data);
+            data && data.length && me.addSession(data);
         });
 
         // 获取 IP 端口网络信息，通知到 tool-area 的 online 选项
@@ -64,10 +65,15 @@ export default {
             this.network = data;
         });
 
+        // show online info
         window.bus.$on('openOnline', function (val) {
             me.onlineModal = val;
         });
-    }
+    },
+
+    methods: mapActions([
+        'addSession'
+    ])
 };
 </script>
 

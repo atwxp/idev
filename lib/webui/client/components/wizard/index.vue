@@ -33,8 +33,8 @@
             </ul>
 
             <div class="btns">
-                <button type="button" class="btn convert" name="convert" @click="convert()">转换</button>
-                <button type="button" class="btn clear" name="clear" @click="clear()">清空</button>
+                <button type="button" class="btn" name="convert" @click="convert()">转换</button>
+                <button type="button" class="btn btn-clear" name="clear" @click="clear()">清空</button>
             </div>
         </form>
 

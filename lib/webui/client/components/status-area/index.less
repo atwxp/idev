@@ -3,42 +3,53 @@
 .status-area {
     position: absolute;
     top: 30px;
+    bottom: 0;
     right: 0;
+    width: 50%;
+    padding-top: 26px;
 
+    border-left: 1px solid #ccc;
     background-color: #fff;
+    overflow-y: auto;
 
-    > ul {
-        .flex();
+    .status-bar {
+        position: fixed;
+        top: 30px;
+        right: 0;
+        width: 50%;
+        height: 26px;
 
-        background: #ececec;
-        border-top: 1px solid #9e9e9e;
-        border-bottom: 1px solid #ccc;
+        > ul {
+            .flex();
 
-        height: 25px;
-        line-height: 25px;
-        text-align: center;
+            background: #ececec;
+            border-bottom: 1px solid #ccc;
 
-        li {
-            display: block;
-            padding: 0 20px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
 
-            .single-line();
-            color: #666;
-            cursor: pointer;
+            li {
+                display: block;
+                padding: 0 20px;
 
-            &.active,
-            &:hover {
-                background: #fff;
-            }
+                .single-line();
+                color: #666;
+                cursor: pointer;
 
-            &+li {
-                border-left: 1px solid #ccc;
+                &.active,
+                &:hover {
+                    background: #fff;
+                }
+
+                &+li {
+                    border-left: 1px solid #ccc;
+                }
             }
         }
     }
 
     .status-content {
-        height: 320px;
-        overflow-y: auto;
+        padding: 20px;
     }
 }

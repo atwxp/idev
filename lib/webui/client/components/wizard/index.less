@@ -1,10 +1,6 @@
 @import '../../util/mixin.less';
 
 .wizard {
-    margin: 0 auto;
-    padding: 20px 0;
-    width: 60%;
-
     .raw-text,
     .result-text {
         display: block;
@@ -12,38 +8,36 @@
         height: 100px;
     }
 
+    form {
+        margin: 10px 0;
+    }
+
     .enctype {
         .flex();
-        margin: 10px 0;
-        height: 20px;
-        line-height: 20px;
 
-        li {
-            margin-right: 10px;
+        -webkit-box-lines: multiple;
+        -moz-box-lines: multiple;
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+
+        > li {
+            margin: 0 10px 10px 0;
         }
     }
 
     .btns {
-        margin: 10px 0;
 
         > .btn {
             line-height: 18px;
             margin-right: 10px;
         }
 
-        .convert {
-            background-color: #5bc0de;
-
-            &:hover {
-                background-color: #2aabd2;
-            }
-        }
-
-        .clear {
+        > .btn-clear {
             background-color: #e38d13;
 
             &:hover {
-                background-color: #eb9316;
+                background-color: #d08110;
             }
         }
     }

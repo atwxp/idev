@@ -1,8 +1,10 @@
 <template>
     <div class="status-area">
-        <ul>
-            <li v-for="(t, index) in tab" @click="togglePanel(index)" v-bind:class="{active: t.isActive}">{{t.text | camelCase}}</li>
-        </ul>
+        <div class="status-bar">
+            <ul>
+                <li v-for="(t, index) in tab" @click="togglePanel(index)" v-bind:class="{active: t.isActive}">{{t.text | camelCase}}</li>
+            </ul>
+        </div>
 
         <div class="status-content">
             <keep-alive>
