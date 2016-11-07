@@ -6,8 +6,8 @@
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="(req, index) in sessionList" @click="selected=index" :class="{selected: selected==index}">
-                <span class="order">{{index}}</span>
+            <li v-for="(req, key) in sessionList" @click="selected=req.id" :class="[{selected: selected==req.id}, req.cls]">
+                <span class="order">{{req.id}}</span>
 
                 <span class="status">{{req.status}}</span>
 
@@ -19,7 +19,7 @@
 
                 <span class="content-type" v-bind:title="req.contentType">{{req.contentType}}</span>
 
-                <span class="server-ip">{{req.serverIp}}</span>
+                <span class="server-ip">{{req.cls}}</span>
             </li>
         </ul>
     </div>

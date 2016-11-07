@@ -48,8 +48,6 @@ export default {
     },
 
     created () {
-        var me = this;
-
         // todo: replace 8889 too uiport
         var url = 'http://' + location.hostname + ':8889/';
 
@@ -57,7 +55,7 @@ export default {
 
         // 监听到请求后更新到 webui 的 req-area, status-area
         socket.on('reqArrival', (data) => {
-            data && data.length && me.addSession(data);
+            data && this.addSession(data);
         });
 
         // 获取 IP 端口网络信息，通知到 tool-area 的 online 选项
@@ -66,8 +64,8 @@ export default {
         });
 
         // show online info
-        window.bus.$on('openOnline', function (val) {
-            me.onlineModal = val;
+        window.bus.$on('openOnline', (val) => {
+            this.onlineModal = val
         });
     },
 

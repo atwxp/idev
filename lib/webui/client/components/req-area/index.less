@@ -35,12 +35,12 @@
     .req-content {
         height: 100%;
         overflow: auto;
+        background-color: #f9f9f9;
     }
 
     .req-list {
         margin-top: @reqNavH;
         font-size: 13px;
-        color: #666;
 
         > li {
             .flex();
@@ -54,6 +54,26 @@
 
                 padding: 0 5px;
                 .single-line();
+            }
+
+            &.html {
+                color: #1746dc;
+            }
+            &.css {
+                color: #941294;
+            }
+            &.js {
+                color: #347d13;
+            }
+
+            &.image,
+            &.blur {
+                color: #777;
+            }
+
+            &.error {
+                background-color: #f7e6cf;
+                color: #e82107;
             }
 
             &.selected {
