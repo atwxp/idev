@@ -6,7 +6,7 @@
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="(req, key) in sessionList" @click="selected=req.id" :class="[{selected: selected==req.id}, req.cls]">
+            <li v-for="req in sessionList" @click="getDetail(req.id)" :class="[{selected: selected==req.id}, req.cls]">
                 <span class="order">{{req.id}}</span>
 
                 <span class="status">{{req.status}}</span>
@@ -15,7 +15,7 @@
 
                 <span class="host" v-bind:title="req.host">{{req.host}}</span>
 
-                <span class="url" v-bind:title="req.pathname">{{req.pathname}}</span>
+                <span class="url" v-bind:title="req.path">{{req.path}}</span>
 
                 <span class="content-type" v-bind:title="req.contentType">{{req.contentType}}</span>
 
@@ -40,7 +40,15 @@ export default {
 
     computed: mapGetters({
         sessionList: 'allSession'
-    })
+    }),
+
+    methods: {
+        getDetail (idx) {
+            this.selected = idx
+
+            window.bus.$emit('detailSession', idx)
+        }
+    }
 }
 </script>
 

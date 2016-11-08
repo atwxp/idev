@@ -1,0 +1,24 @@
+.inspector-row {
+    @h: 24px;
+
+    overflow: hidden;
+    padding:  0 10px;
+    line-height: @h;
+    border-bottom: 1px solid #666;
+
+    .label {
+        float: left;
+        width: 20%;
+        margin-right: 10px;
+        text-align: right;
+
+        & + .value {
+            display: block;
+            border-left: 1px solid #666;
+            padding-left: 8px;
+            min-height: @h;
+            overflow: hidden;
+        }
+    }
+
+}

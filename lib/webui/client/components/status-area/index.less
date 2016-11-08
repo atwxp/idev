@@ -1,23 +1,28 @@
 @import '../../util/mixin.less';
 
+
 .status-area {
+    @barH: 26px;
+
     position: absolute;
     top: 30px;
     bottom: 0;
     right: 0;
     width: 50%;
-    padding-top: 26px;
+    padding-top: @barH;
 
     border-left: 1px solid #ccc;
     background-color: #fff;
-    overflow-y: auto;
 
     .status-bar {
-        position: fixed;
-        top: 30px;
+        position: absolute;
+        left: 0;
+        top: 0;
         right: 0;
-        width: 50%;
-        height: 26px;
+        height: @barH;
+        font-size: 12px;
+
+        .user-select();
 
         > ul {
             .flex();
@@ -25,31 +30,28 @@
             background: #ececec;
             border-bottom: 1px solid #ccc;
 
-            height: 25px;
-            line-height: 25px;
+            height: @barH - 1;
+            line-height: @barH - 1;
             text-align: center;
 
             li {
                 display: block;
                 padding: 0 20px;
+                border-right: 1px solid #717171;
 
                 .single-line();
-                color: #666;
                 cursor: pointer;
 
                 &.active,
                 &:hover {
                     background: #fff;
                 }
-
-                &+li {
-                    border-left: 1px solid #ccc;
-                }
             }
         }
     }
 
     .status-content {
-        padding: 20px;
+        height: 100%;
+        overflow-y: auto;
     }
 }

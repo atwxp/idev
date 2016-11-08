@@ -1,0 +1,42 @@
+@import '../../util/mixin.less';
+
+.inspector {
+    font-size: 12px;
+
+    .inspector-bar {
+        .flex();
+        background: #ececec;
+        border-bottom: 1px solid #ccc;
+        .user-select();
+        line-height: 20px;
+
+        > li {
+            display: block;
+            border-right: 1px solid #717171;
+            padding: 0 10px;
+            cursor: pointer;
+
+            &.active,
+            &:hover {
+                background-color: #fff;
+            }
+        }
+    }
+
+    .inspector-content {
+        background: #ecf6fb;
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    > .req-inspector {
+
+    }
+
+    > .res-inspector {
+        .inspector-bar {
+            border-top: 1px solid #ccc;
+        }
+    }
+}
+
