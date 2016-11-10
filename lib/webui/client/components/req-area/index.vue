@@ -1,7 +1,7 @@
 <template>
 <div class="req-area">
     <ul class="req-bar">
-        <li v-for="n in nav" :class="n">{{n | capitalize}}</li>
+        <li v-for="n in nav" :class="n">{{n | camelCase('-', '-', false)}}</li>
     </ul>
 
     <div class="req-content">
@@ -17,9 +17,9 @@
 
                 <span class="url" v-bind:title="req.path">{{req.path}}</span>
 
-                <span class="content-type" v-bind:title="req.contentType">{{req.contentType}}</span>
+                <span class="content-type" v-bind:title="req.resHeaders && req.resHeaders['content-type']">{{req.resHeaders && req.resHeaders['content-type']}}</span>
 
-                <span class="server-ip">{{req.cls}}</span>
+                <span class="server-ip">{{req.contentLength}}</span>
             </li>
         </ul>
     </div>

@@ -1,5 +1,9 @@
+@import '../../util/mixin.less';
+
 .inspector-row {
     @h: 24px;
+
+    .flex();
 
     overflow: hidden;
     padding:  0 10px;
@@ -7,17 +11,19 @@
     border-bottom: 1px solid #666;
 
     .label {
-        float: left;
+        display: block;
         width: 20%;
         margin-right: 10px;
         text-align: right;
 
         & + .value {
             display: block;
+            flex: 1 1 0;
             border-left: 1px solid #666;
             padding-left: 8px;
             min-height: @h;
             overflow: hidden;
+            word-break: break-all;
         }
     }
 
