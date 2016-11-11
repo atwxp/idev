@@ -187,8 +187,10 @@ export default {
                 d[v] = session['resHeaders'][v]
             })
 
-            d['access-control-expose-headers'].forEach((v) => {
-                d[v] = session[resHeaders][v]
+            let ips = d['access-control-expose-headers'];
+
+            ips = ips && ips.split(',').forEach((v) => {
+                d[v] = session['resHeaders'][v]
             })
 
             this.$set(this.resData, 'headers', d)

@@ -12,6 +12,27 @@
     width: @reqNavW;
     padding-top: @reqNavH;
 
+    .req-filter {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: #333;
+
+        .req-filter-input {
+            display: block;
+            width: 100%;
+            padding: 0 10px;
+            .box-sizing(border-box);
+            height: 25px;
+            line-height: 25px;
+
+            background: transparent;
+            color: #fff;
+            cursor: text;
+        }
+    }
+
     .req-bar {
         position: absolute;
         left: 0;

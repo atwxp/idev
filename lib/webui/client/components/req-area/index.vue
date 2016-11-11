@@ -6,7 +6,7 @@
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="req in sessionList" @click="getDetail(req.id)" :class="[{selected: selected==req.id}, req.cls]">
+            <li v-for="req in matchUrl(sessionList)" @click="getDetail(req.id)" :class="[{selected: selected==req.id}, req.cls]">
                 <span class="order">{{req.id}}</span>
 
                 <span class="status">{{req.status}}</span>
@@ -19,9 +19,13 @@
 
                 <span class="content-type" v-bind:title="req.resHeaders && req.resHeaders['content-type']">{{req.resHeaders && req.resHeaders['content-type']}}</span>
 
-                <span class="server-ip">{{req.contentLength}}</span>
+                <span class="server-ip"></span>
             </li>
         </ul>
+    </div>
+
+    <div class="req-filter">
+        <input type="text" class="req-filter-input" v-model="filterText" placeholder="type filter url">
     </div>
 </div>
 </template>
@@ -34,7 +38,10 @@ export default {
     data () {
         return {
             nav: ['order', 'status', 'protocol', 'host', 'url', 'content-type', 'server-ip'],
-            selected: -1
+
+            selected: -1,
+
+            filterText: ''
         }
     },
 
@@ -43,6 +50,18 @@ export default {
     }),
 
     methods: {
+        matchUrl (sessions) {
+            let v = this.filterText.trim();
+
+            if (!v) {
+                return sessions;
+            }
+
+            return sessions.filter((s) => {
+                return s.url.indexOf(v) > -1
+            })
+        },
+
         getDetail (idx) {
             this.selected = idx
 
