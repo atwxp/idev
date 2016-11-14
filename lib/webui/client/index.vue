@@ -1,18 +1,18 @@
 <template>
-    <div class="app">
-        <tool-area></tool-area>
+<div class="app">
+    <tool-area></tool-area>
 
-        <req-area></req-area>
+    <req-area></req-area>
 
-        <status-area></status-area>
+    <status-area></status-area>
 
-        <modal :showing.sync="onlineModal" cls="online-modal" v-on:close="onlineModal=false">
-            <h5>Hostname: {{network.hostname}}</h5>
-            <h5>Port: {{network.port}}</h5>
-            <h5>IPV4:</h5>
-            <p v-for="ip in network.ipv4">{{ip}}</p>
-        </modal>
-    </div>
+    <modal :showing.sync="onlineModal" cls="online-modal" v-on:close="onlineModal=false">
+        <h5>Hostname: {{network.hostname}}</h5>
+        <h5>Port: {{network.port}}</h5>
+        <h5>IPV4:</h5>
+        <p v-for="ip in network.ipv4">{{ip}}</p>
+    </modal>
+</div>
 </template>
 
 <script>

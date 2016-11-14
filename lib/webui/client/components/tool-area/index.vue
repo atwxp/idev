@@ -1,13 +1,12 @@
 <template>
-    <div class="tool-area">
-        <ul>
-            <li v-for="m in tool" @click="dealClick(m)">{{m | camelCase}}</li>
-        </ul>
-    </div>
+<div class="tool-area">
+    <ul>
+        <li v-for="m in tool" @click="dealClick(m)">{{m | camelCase}}</li>
+    </ul>
+</div>
 </template>
 
 <script>
-
 export default {
     data () {
         return {

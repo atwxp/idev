@@ -1,5 +1,5 @@
 <template>
-    <div class="overlay" @click="handleClick" @touchmove="prevent" :style="style"></div>
+<div class="overlay" @click="handleClick" @touchmove="prevent" :style="style"></div>
 </template>
 
 <script>

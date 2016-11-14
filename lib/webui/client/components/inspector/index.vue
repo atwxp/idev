@@ -1,39 +1,39 @@
 <template>
-    <div class="inspector">
-        <div class="req-inspector">
-            <ul class="inspector-bar">
-                <li v-for="(n, index) in reqNav" @click="toggleGroup('req', index)" v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
-            </ul>
+<div class="inspector">
+    <div class="req-inspector">
+        <ul class="inspector-bar">
+            <li v-for="(n, index) in reqNav" @click="toggleGroup('req', index)" v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
+        </ul>
 
-            <div class="inspector-content">
-                <inspector-table type="req-inspector-headers" v-show="currentReqView=='headers'" :info="reqData.headers"></inspector-table>
+        <div class="inspector-content">
+            <inspector-table type="req-inspector-headers" v-show="currentReqView=='headers'" :info="reqData.headers"></inspector-table>
 
-                <inspector-table type="req-inspector-cookies" v-show="currentReqView=='cookies'" :info="reqData.cookies"></inspector-table>
+            <inspector-table type="req-inspector-cookies" v-show="currentReqView=='cookies'" :info="reqData.cookies"></inspector-table>
 
-                <inspector-table type="req-inspector-webform" v-show="currentReqView=='webform'" :info="reqData.webform"></inspector-table>
-            </div>
+            <inspector-table type="req-inspector-webform" v-show="currentReqView=='webform'" :info="reqData.webform"></inspector-table>
         </div>
+    </div>
 
-        <div class="res-inspector">
-            <ul class="inspector-bar">
-                <li v-for="(n, index) in resNav" @click="toggleGroup('res', index)"  v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
-            </ul>
+    <div class="res-inspector">
+        <ul class="inspector-bar">
+            <li v-for="(n, index) in resNav" @click="toggleGroup('res', index)"  v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
+        </ul>
 
-            <div class="inspector-content">
-                <inspector-table type="res-inspector-headers" v-show="currentResView=='headers'" :info="resData.headers"></inspector-table>
+        <div class="inspector-content">
+            <inspector-table type="res-inspector-headers" v-show="currentResView=='headers'" :info="resData.headers"></inspector-table>
 
-                <div class="res-inspector-textview" v-show="currentResView=='textview'">
-                    {{resData.textview}}
-                </div>
+            <div class="res-inspector-textview" v-show="currentResView=='textview'">
+                {{resData.textview}}
+            </div>
 
-                <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'"></div>
+            <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'"></div>
 
-                <div class="res-inspector-image" v-show="currentResView=='imageview'">
-                    <img :src="resData.imageview" v-show="resData&&resData.imageview">
-                </div>
+            <div class="res-inspector-image" v-show="currentResView=='imageview'">
+                <img :src="resData.imageview" v-show="resData&&resData.imageview">
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

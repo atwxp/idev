@@ -1,15 +1,15 @@
 <template>
-    <modal :showing.sync="showing" :cls="cls" v-on:close="close">
-       <p class="alert-content" :class="{
-            info: type == 'info',
-            warning: type == 'warning',
-            error: type == 'error'
-        }">
-            {{msg}}
-        </p>
+<modal :showing.sync="showing" :cls="cls" v-on:close="close">
+   <p class="alert-content" :class="{
+        info: type == 'info',
+        warning: type == 'warning',
+        error: type == 'error'
+    }">
+        {{msg}}
+    </p>
 
-        <button slot="footer" class="btn" @click="sure">确定</button>
-    </modal>
+    <button slot="footer" class="btn" @click="sure">确定</button>
+</modal>
 </template>
 
 <script>
