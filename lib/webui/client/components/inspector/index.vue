@@ -26,6 +26,8 @@
                     {{resData.textview}}
                 </div>
 
+                <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'"></div>
+
                 <div class="res-inspector-image" v-show="currentResView=='imageview'">
                     <img :src="resData.imageview" v-show="resData&&resData.imageview">
                 </div>
@@ -35,10 +37,14 @@
 </template>
 
 <script>
+import JSONFormatter from 'json-formatter-js'
+import Beautify from 'js-beautify'
+import Prism from 'prismjs'
+
 import { mapGetters } from 'vuex'
 
 import InspectorTable from 'components/inspector-table'
-import InspectorContent from 'components/inspector-content'
+
 import util from 'util'
 
 export default {
@@ -83,11 +89,6 @@ export default {
                     isActive: false
                 },
                 {
-                    view: 'json',
-                    text: 'JSON',
-                    isActive: false
-                },
-                {
                     view: 'cookies',
                     text: 'cookies',
                     isActive: false
@@ -110,8 +111,7 @@ export default {
     }),
 
     components: {
-        InspectorTable,
-        InspectorContent
+        InspectorTable
     },
 
     methods: {
@@ -200,16 +200,50 @@ export default {
             this.$set(this.resData, 'textview', session.textview)
         },
 
-        getResSyntaxview () {
+        getResSyntaxview (session) {
+            // todo: get content type
+            // todo: jsonformatter/jsonp
+            // @see: https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
+            let rawText = session.textview;
 
+            let cType = session['resHeaders']['content-type'];
+
+            let syntaxview;
+
+            let type = '';
+
+            switch (type) {
+                case 'js':
+                    syntaxview = '<pre><code class="language-javascript">'
+                        + Prism.highlight(Beautify(rawText), Prism.languages.js)
+                        + '</code></pre>';
+                    break;
+
+                case 'css':
+                    syntaxview = '<pre><code class="language-css">'
+                        + Prism.highlight(Beautify.css(rawText), Prism.languages.css)
+                        + '</code></pre>';
+                    break;
+
+                case 'html':
+                    syntaxview = '<pre><code class="language-html">'
+                        + Prism.highlight(Beautify.html(rawText), Prism.languages.html)
+                        + '</code></pre>';
+                    break;
+
+                case 'json':
+                case 'jsonp':
+                    syntaxview = new JSONFormatter(JSON.parse(rawText), true).render();
+                    break;
+
+                default:
+            }
+
+            // this.$el.querySelector('.res-inspector-json').appendChild(syntaxview)
         },
 
         getResImageview (session) {
             this.$set(this.resData, 'imageview', /^image\//i.test(session['resHeaders']['content-type']) ? session.url : '')
-        },
-
-        getResJson () {
-
         },
 
         getResCookies () {
