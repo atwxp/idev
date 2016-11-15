@@ -31,6 +31,8 @@
             <div class="res-inspector-image" v-show="currentResView=='imageview'">
                 <img :src="resData.imageview" v-show="resData&&resData.imageview">
             </div>
+
+            <inspector-table type="res-inspector-cookies" v-show="currentResView=='cookies'" :info="resData.cookies"></inspector-table>
         </div>
     </div>
 </div>
@@ -184,14 +186,14 @@ export default {
                 'x-powered-by',
                 'x-cache'
             ].forEach((v) => {
-                d[v] = session['resHeaders'][v]
+                d[v] = session['resHeaders'] && session['resHeaders'][v]
             })
 
-            let ips = d['access-control-expose-headers'];
-
-            ips = ips && ips.split(',').forEach((v) => {
-                d[v] = session['resHeaders'][v]
-            })
+            // x-client-ip, x-server-ip
+            let exposeHeaders = d['access-control-expose-headers'];
+            exposeHeaders && exposeHeaders.split(/,\s*/).forEach((v) => {
+                d[v] = session['resHeaders'][util.camelCase(v, '-', '-', false, true)]
+            });
 
             this.$set(this.resData, 'headers', d)
         },
@@ -201,45 +203,101 @@ export default {
         },
 
         getResSyntaxview (session) {
-            // todo: get content type
-            // todo: jsonformatter/jsonp
-            // @see: https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
             let rawText = session.textview;
-
-            let cType = session['resHeaders']['content-type'];
 
             let syntaxview;
 
-            let type = '';
+            let cType = session['resHeaders'] && session['resHeaders']['content-type'];
+            let type = util.getContentType(cType);
+
+            // JSONP形式下的 callback name
+            let funcName = null;
+
+            // JSONP形式下的 json对象
+            let jsonObj = null;
+
+            // jsonp
+            // @see: https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
+            if (type !== 'javascript' && type !== 'json') {
+                let reg = /^([\w\.]+)\(\s*([\s\S]*)\s*\)$/igm;
+
+                try {
+                    let matches = reg.exec(rawText);
+
+                    if (matches != null) {
+                        funcName = matches[1] + '(';
+
+                        rawText = matches[2];
+
+                        jsonObj = new Function('return ' + rawText)();
+
+                        // eg: jsonp1("{\"ret\":\"0\", \"msg\":\"ok\"}")
+                        if (typeof jsonObj === 'string') {
+                            jsonObj = new Function('return ' + jsonObj)();
+                        }
+
+                        type = 'jsonp';
+                    }
+                }
+                catch (e) {
+                    rawText = e.message;
+
+                    type = 'jsonpError';
+                }
+            }
+
+            if (!rawText) {
+                type = '';
+            }
 
             switch (type) {
-                case 'js':
-                    syntaxview = '<pre><code class="language-javascript">'
+                case 'javascript':
+                    syntaxview = ''
+                        + '<pre><code class="language-javascript">'
                         + Prism.highlight(Beautify(rawText), Prism.languages.js)
                         + '</code></pre>';
                     break;
 
                 case 'css':
-                    syntaxview = '<pre><code class="language-css">'
+                    syntaxview = ''
+                        + '<pre><code class="language-css">'
                         + Prism.highlight(Beautify.css(rawText), Prism.languages.css)
                         + '</code></pre>';
                     break;
 
                 case 'html':
-                    syntaxview = '<pre><code class="language-html">'
+                    syntaxview = ''
+                        + '<pre><code class="language-html">'
                         + Prism.highlight(Beautify.html(rawText), Prism.languages.html)
                         + '</code></pre>';
                     break;
 
                 case 'json':
-                case 'jsonp':
                     syntaxview = new JSONFormatter(JSON.parse(rawText), true).render();
+                    break;
+
+                case 'jsonp':
+                    syntaxview = util.createNode(util.createNode(funcName, 'p', 'callback-name'), 'div');
+
+                    syntaxview.appendChild(new JSONFormatter(JSON.parse(rawText), true).render());
+
+                    syntaxview.appendChild(util.createNode(')', 'p', 'callback-name'));
+                    break;
+
+                case 'jsonpError':
+                    syntaxview = rawText;
                     break;
 
                 default:
             }
 
-            // this.$el.querySelector('.res-inspector-json').appendChild(syntaxview)
+            this.$el.querySelector('.res-inspector-syntaxview').innerHTML = '';
+
+            if (syntaxview) {
+                syntaxview = util.createNode(syntaxview);
+                this.$el.querySelector('.res-inspector-syntaxview').appendChild(syntaxview);
+            }
+
         },
 
         getResImageview (session) {
