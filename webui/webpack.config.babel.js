@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import path from 'path';
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import path from 'path'
+import webpack from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
 const abs = (...values) => {
     let p = [__dirname].concat(values);

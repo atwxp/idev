@@ -17,9 +17,9 @@
 
                 <span class="url" v-bind:title="req.path">{{req.path}}</span>
 
-                <span class="content-type" v-bind:title="req.resHeaders && req.resHeaders['content-type']">{{req.resHeaders && req.resHeaders['content-type']}}</span>
+                <span class="content-type" v-bind:title="req.contentType">{{req.contentType}}</span>
 
-                <span class="server-ip"></span>
+                <span class="server-ip">{{req.serverIp}}</span>
             </li>
         </ul>
     </div>

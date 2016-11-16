@@ -1,16 +1,19 @@
 # idev
 
+## commands
 
-### commands
+查看版本
 
-idev -V
+    idev -V
 
-idev help
+帮助信息
 
-idev start
+    idev help
 
-idev start --debug
+启动调试
 
-### refer
+    idev start
+
+## refer
 
 - [Mixu's Node book](http://book.mixu.net/node/ch10.html)

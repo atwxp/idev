@@ -228,6 +228,19 @@ function getContentType(contentType) {
     return type && type[0]
 }
 
+function getStatusType(statusCode) {
+    let statusCodePattern = {
+        error: /(4\d{2})|(5\d{2})/,
+        blur: /(3\d{2})/
+    }
+
+    let type = Object.keys(statusCodePattern).filter((p) => {
+        return statusCodePattern[p].test(statusCode)
+    })
+
+    return type && type[0]
+}
+
 function createNode(str, outHtml, cls) {
     if (!str) {
         return str;
@@ -256,6 +269,7 @@ export default {
     camelCase,
     capitalize,
     createNode,
+    getStatusType,
     getContentType,
     unicodeEncode,
     unicodeDecode,

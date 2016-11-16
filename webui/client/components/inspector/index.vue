@@ -132,12 +132,12 @@ export default {
             };
 
             [
-                'host',
-                'cookie', 'connection', 'proxy-connection', 'cache-control', 'user-agent',
+                'host', 'cookie', 'if-modified-since',
+                'connection', 'proxy-connection','cache-control',
                 'accept', 'accept-encoding', 'accept-language',
-                'referer'
+                'user-agent', 'referer'
             ].forEach((v) => {
-                d[v] = session['reqHeaders'][v]
+                d[v] = session['reqHeader'][v]
             })
 
             this.$set(this.reqData, 'headers', d)
@@ -148,7 +148,7 @@ export default {
 
             let rdecode = /(%[0-9A-Z]{2})+/g;
 
-            let cookie = session['reqHeaders']['cookie'];
+            let cookie = session['reqHeader']['cookie'];
 
             cookie && cookie.split(/;\s*/).forEach((v) => {
                 let parts = v.split('=')
@@ -174,41 +174,47 @@ export default {
                     session.statusMessage
                 ].join(' '),
 
-                'content-length': session.contentLength
-            };
+                'body-length': session.bodyLength,
+
+                'content-length': session.contentLength,
+
+                'content-type': session.contentType
+            }
+
+            session['resHeader'] || (session['resHeader'] = {});
 
             [
-                'content-type', 'content-encoding', 'transfer-encoding',
+                'content-encoding', 'transfer-encoding',
                 'cache-control', 'date', 'expires', 'vary', 'last-modified',
                 'server', 'connection',
                 'access-control-allow-origin',
                 'access-control-expose-headers',
                 'x-powered-by',
-                'x-cache'
+                'x-cache', 'x-cache-lookup'
             ].forEach((v) => {
-                d[v] = session['resHeaders'] && session['resHeaders'][v]
+                d[v] = session['resHeader'][v]
             })
 
             // x-client-ip, x-server-ip
-            let exposeHeaders = d['access-control-expose-headers'];
-            exposeHeaders && exposeHeaders.split(/,\s*/).forEach((v) => {
-                d[v] = session['resHeaders'][util.camelCase(v, '-', '-', false, true)]
-            });
+            let exposeHeaders = d['access-control-expose-headers']
+
+            exposeHeaders && exposeHeaders.split(/\s*,\s*/).forEach((v) => {
+                d[v] = session['resHeader'][util.camelCase(v, '-', '-', false, true)]
+            })
 
             this.$set(this.resData, 'headers', d)
         },
 
         getResTextview (session) {
-            this.$set(this.resData, 'textview', session.textview)
+            this.$set(this.resData, 'textview', session.resBody)
         },
 
         getResSyntaxview (session) {
-            let rawText = session.textview;
+            let rawText = session.resBody;
 
             let syntaxview;
 
-            let cType = session['resHeaders'] && session['resHeaders']['content-type'];
-            let type = util.getContentType(cType);
+            let type = util.getContentType(session.contentType);
 
             // JSONP形式下的 callback name
             let funcName = null;
@@ -216,7 +222,6 @@ export default {
             // JSONP形式下的 json对象
             let jsonObj = null;
 
-            // jsonp
             // @see: https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
             if (type !== 'javascript' && type !== 'json') {
                 let reg = /^([\w\.]+)\(\s*([\s\S]*)\s*\)$/igm;
@@ -225,7 +230,7 @@ export default {
                     let matches = reg.exec(rawText);
 
                     if (matches != null) {
-                        funcName = matches[1] + '(';
+                        funcName = matches[1];
 
                         rawText = matches[2];
 
@@ -277,7 +282,7 @@ export default {
                     break;
 
                 case 'jsonp':
-                    syntaxview = util.createNode(util.createNode(funcName, 'p', 'callback-name'), 'div');
+                    syntaxview = util.createNode(util.createNode(funcName + '(', 'p', 'callback-name'), 'div');
 
                     syntaxview.appendChild(new JSONFormatter(JSON.parse(rawText), true).render());
 
@@ -291,19 +296,16 @@ export default {
                 default:
             }
 
-            this.$el.querySelector('.res-inspector-syntaxview').innerHTML = '';
+            this.$el.querySelector('.res-inspector-syntaxview').innerHTML = ''
 
-            if (syntaxview) {
-                syntaxview = util.createNode(syntaxview);
-                this.$el.querySelector('.res-inspector-syntaxview').appendChild(syntaxview);
-            }
-
+            syntaxview && this.$el.querySelector('.res-inspector-syntaxview').appendChild(util.createNode(syntaxview))
         },
 
         getResImageview (session) {
-            this.$set(this.resData, 'imageview', /^image\//i.test(session['resHeaders']['content-type']) ? session.url : '')
+            this.$set(this.resData, 'imageview', /^image\//i.test(session.contentType) ? session.url : '')
         },
 
+        // todo:
         getResCookies () {
 
         },

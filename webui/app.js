@@ -1,14 +1,15 @@
-import path from 'path';
-import io from 'socket.io';
-import express from 'express';
-import httpProxy from 'http-proxy';
-import bodyParser from 'body-parser';
+import os from 'os'
+import path from 'path'
+import io from 'socket.io'
+import express from 'express'
+import httpProxy from 'http-proxy'
+import bodyParser from 'body-parser'
 
-import routesAPI from './api/index';
-import webpackDevConfig from './webpack.dev.config.babel';
+import routesAPI from './api/index'
+import webpackDevConfig from './webpack.dev.config.babel'
 
-import util from '../util';
-import config from '../config';
+import util from '../lib/util'
+import config from '../lib/config'
 
 let app = express();
 const proxy = httpProxy.createProxyServer();
@@ -51,7 +52,7 @@ app.run = function () {
 
         // a new client join in 获取 IP 端口 hostname网络信息
         client.emit('join', {
-            hostname: require('os').hostname(),
+            hostname: os.hostname(),
             port: config.port,
             ipv4: util.getIpList()
         });
@@ -92,4 +93,4 @@ app.run = function () {
     });
 };
 
-export default app;
+export default app

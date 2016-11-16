@@ -1,20 +1,20 @@
-import program from 'commander';
+import program from 'commander'
 
-import pkgConfig from '../package.json';
-import index from '../index';
+import pkgConfig from '../package.json'
+import index from '../index'
 
 let started = false;
 
 function getOptions() {
-    let obj = {};
+    let obj = {}
 
     Object.keys(program).forEach((name) => {
         if (program.optionFor('--' + name)) {
-            obj[name] = program[name];
+            obj[name] = program[name]
         }
     });
 
-    return obj;
+    return obj
 }
 
 program
@@ -42,7 +42,7 @@ program
 program.parse(process.argv);
 
 if (!started) {
-    console.log('type [idev start] to start debug.');
+    console.log('type [idev start] to start debug.')
 }
 
 else {
