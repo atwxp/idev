@@ -11,6 +11,10 @@
             <inspector-table type="req-inspector-cookies" v-show="currentReqView=='cookies'" :info="reqData.cookies"></inspector-table>
 
             <inspector-table type="req-inspector-webform" v-show="currentReqView=='webform'" :info="reqData.webform"></inspector-table>
+
+            <div class="req-inspector-textview" v-show="currentReqView=='textview'">
+                {{reqData.textview}}
+            </div>
         </div>
     </div>
 
@@ -31,8 +35,6 @@
             <div class="res-inspector-image" v-show="currentResView=='imageview'">
                 <img :src="resData.imageview" v-show="resData&&resData.imageview">
             </div>
-
-            <inspector-table type="res-inspector-cookies" v-show="currentResView=='cookies'" :info="resData.cookies"></inspector-table>
         </div>
     </div>
 </div>
@@ -67,6 +69,11 @@ export default {
                     view: 'webform',
                     text: 'web-forms',
                     isActive: false
+                },
+                {
+                    view: 'textview',
+                    text: 'text-view',
+                    isActive: false
                 }
             ],
             resNav: [
@@ -88,11 +95,6 @@ export default {
                 {
                     view: 'imageview',
                     text: 'image-view',
-                    isActive: false
-                },
-                {
-                    view: 'cookies',
-                    text: 'cookies',
                     isActive: false
                 }
             ],
@@ -133,8 +135,13 @@ export default {
 
             [
                 'host', 'cookie', 'if-modified-since',
+
+                'content-type', 'content-length', 'x-requested-with', 'origin',
+
                 'connection', 'proxy-connection','cache-control',
+
                 'accept', 'accept-encoding', 'accept-language',
+
                 'user-agent', 'referer'
             ].forEach((v) => {
                 d[v] = session['reqHeader'][v]
@@ -165,6 +172,10 @@ export default {
             this.$set(this.reqData, 'webform', session.query)
         },
 
+        getReqTextview (session) {
+            this.$set(this.reqData, 'textview', session.reqBody)
+        },
+
         // res
         getResHeaders (session) {
             let d = {
@@ -174,126 +185,158 @@ export default {
                     session.statusMessage
                 ].join(' '),
 
-                'body-length': session.bodyLength,
+                'body-length': session.bodyLength + '(' + util.formatSize(session.bodyLength) + ')',
 
-                'content-length': session.contentLength,
+                'content-length': session.contentLength + '(' + util.formatSize(session.contentLength) + ')',
 
                 'content-type': session.contentType
             }
 
-            session['resHeader'] || (session['resHeader'] = {});
+            let resHeader = session['resHeader'] || {};
 
             [
                 'content-encoding', 'transfer-encoding',
+
                 'cache-control', 'date', 'expires', 'vary', 'last-modified',
-                'server', 'connection',
-                'access-control-allow-origin',
-                'access-control-expose-headers',
-                'x-powered-by',
-                'x-cache', 'x-cache-lookup'
+
+                'server', 'connection', 'set-cookie',
+
+                'access-control-allow-origin', 'access-control-expose-headers',
+
+                'x-powered-by', 'x-cache', 'x-cache-lookup',
+
+                'tracecode'
             ].forEach((v) => {
-                d[v] = session['resHeader'][v]
+                // \n not work
+                d[v] = util.type(resHeader[v]) === 'array' ? resHeader[v].join('\n\n') : resHeader[v]
             })
 
             // x-client-ip, x-server-ip
             let exposeHeaders = d['access-control-expose-headers']
 
             exposeHeaders && exposeHeaders.split(/\s*,\s*/).forEach((v) => {
-                d[v] = session['resHeader'][util.camelCase(v, '-', '-', false, true)]
+                d[v] = resHeader[util.camelCase(v, '-', '-', false, true)]
             })
 
             this.$set(this.resData, 'headers', d)
         },
 
+        // todo: what other should not has textview ??
         getResTextview (session) {
-            this.$set(this.resData, 'textview', session.resBody)
+            this.$set(this.resData, 'textview', /^image\//i.test(session.contentType) ? '' : session.resBody)
         },
 
         getResSyntaxview (session) {
-            let rawText = session.resBody;
+            let rawText = session.resBody
 
-            let syntaxview;
+            let syntaxview
 
-            let type = util.getContentType(session.contentType);
+            let type = util.getContentType(session.contentType)
+
+            type = !rawText ? '' : type
 
             // JSONP形式下的 callback name
             let funcName = null;
 
-            // JSONP形式下的 json对象
-            let jsonObj = null;
+            // https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
+            // jsonp should return application/javascript
+            if (type === 'javascript' || type === 'html' || type === 'json') {
+                // JSONP形式下的 json对象
+                let jsonObj = null
 
-            // @see: https://github.com/zxlie/FeHelper/blob/master/chrome/static/js/jsonformat/fe-jsonformat.js
-            if (type !== 'javascript' && type !== 'json') {
-                let reg = /^([\w\.]+)\(\s*([\s\S]*)\s*\)$/igm;
+                let reg = /^([\w\.]+)\(\s*([\s\S]*)\s*\)$/igm
 
                 try {
                     let matches = reg.exec(rawText);
 
                     if (matches != null) {
-                        funcName = matches[1];
+                        funcName = matches[1]
 
-                        rawText = matches[2];
+                        let newSource = matches[2]
 
-                        jsonObj = new Function('return ' + rawText)();
-
-                        // eg: jsonp1("{\"ret\":\"0\", \"msg\":\"ok\"}")
-                        if (typeof jsonObj === 'string') {
-                            jsonObj = new Function('return ' + jsonObj)();
-                        }
-
-                        type = 'jsonp';
+                        jsonObj = new Function('return ' + newSource)()
                     }
                 }
                 catch (e) {
-                    rawText = e.message;
+                }
 
-                    type = 'jsonpError';
+                try {
+                    if (jsonObj == null || typeof jsonObj !== 'object') {
+                        jsonObj = new Function('return ' + rawText)()
+
+                        // eg: jsonp1("{\"ret\":\"0\", \"msg\":\"ok\"}")
+                        if (typeof jsonObj === 'string') {
+                            jsonObj = new Function('return ' + jsonObj)()
+                        }
+                    }
+                }
+
+                catch (e) {
+                }
+
+                // 是json格式，可以进行JSON自动格式化
+                if (jsonObj != null && typeof jsonObj == 'object') {
+
+                    // 要尽量保证格式化的东西一定是一个json，所以需要把内容进行JSON.stringify处理
+                    try {
+                        rawText = JSON.stringify(jsonObj)
+
+                        type = 'jsonp'
+                    }
+
+                    // 通过JSON反解不出来的，一定有问题
+                    catch (e) {
+                    }
                 }
             }
 
-            if (!rawText) {
-                type = '';
-            }
-
+            // todo: try catch??
             switch (type) {
                 case 'javascript':
                     syntaxview = ''
                         + '<pre><code class="language-javascript">'
                         + Prism.highlight(Beautify(rawText), Prism.languages.js)
-                        + '</code></pre>';
+                        + '</code></pre>'
+
                     break;
 
                 case 'css':
                     syntaxview = ''
                         + '<pre><code class="language-css">'
                         + Prism.highlight(Beautify.css(rawText), Prism.languages.css)
-                        + '</code></pre>';
-                    break;
+                        + '</code></pre>'
+
+                    break
 
                 case 'html':
                     syntaxview = ''
                         + '<pre><code class="language-html">'
                         + Prism.highlight(Beautify.html(rawText), Prism.languages.html)
-                        + '</code></pre>';
-                    break;
+                        + '</code></pre>'
+
+                    break
 
                 case 'json':
-                    syntaxview = new JSONFormatter(JSON.parse(rawText), true).render();
-                    break;
+                    syntaxview = new JSONFormatter(JSON.parse(rawText), true).render()
+
+                    break
 
                 case 'jsonp':
-                    syntaxview = util.createNode(util.createNode(funcName + '(', 'p', 'callback-name'), 'div');
+                    if (funcName) {
+                        syntaxview = util.createNode(util.createNode(funcName + '(', 'p', 'callback-name'), 'div')
 
-                    syntaxview.appendChild(new JSONFormatter(JSON.parse(rawText), true).render());
+                        syntaxview.appendChild(new JSONFormatter(JSON.parse(rawText), true).render())
 
-                    syntaxview.appendChild(util.createNode(')', 'p', 'callback-name'));
-                    break;
+                        syntaxview.appendChild(util.createNode(')', 'p', 'callback-name'))
+                    }
+                    else {
+                        syntaxview = new JSONFormatter(JSON.parse(rawText), true).render()
+                    }
 
-                case 'jsonpError':
-                    syntaxview = rawText;
-                    break;
+                    break
 
                 default:
+                    syntaxview = ''
             }
 
             this.$el.querySelector('.res-inspector-syntaxview').innerHTML = ''
@@ -303,11 +346,6 @@ export default {
 
         getResImageview (session) {
             this.$set(this.resData, 'imageview', /^image\//i.test(session.contentType) ? session.url : '')
-        },
-
-        // todo:
-        getResCookies () {
-
         },
 
         getInfo (session) {

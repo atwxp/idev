@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import util from 'util';
-
 import inspector from 'components/inspector';
 import responder from 'components/responder';
 import composer from 'components/composer';

@@ -66,8 +66,10 @@ function capitalize(str, lower) {
 /**
  * transform camelCase
  *
- * util.camelCase(v, '-', true), 'content-type' => 'contentType'
  * util.camelCase(v), 'auto-response' => 'AutoResponse'
+ * util.camelCase(v, '-', true), 'content-type' => 'contentType'
+ * util.camelCase(v, '-', '-', true), 'content-type' => 'content-Type'
+ * util.camelCase(v, '-', '-', false, true), 'Auto-Response' => 'auto-response'
  */
 function camelCase(str, modifier = '-', joiner = '', firstLower = false, allLower = false) {
 
@@ -257,6 +259,26 @@ function createNode(str, outHtml, cls) {
     return outHtml ? div : div.firstChild;
 }
 
+function formatSize(size) {
+    let unit = {
+        'K': 1024,
+
+        'M': 1024 * 1024,
+
+        'G': 1024 * 1024 * 1024,
+    }
+
+    let keys = Object.keys(unit)
+
+    for (let i = 0, l = keys.length; i < l; i++) {
+        let v = unit[keys[i]]
+
+        if (size % v < 1024) {
+            return size / v + keys[i]
+        }
+    }
+}
+
 export default {
     gid,
     type,
@@ -269,6 +291,7 @@ export default {
     camelCase,
     capitalize,
     createNode,
+    formatSize,
     getStatusType,
     getContentType,
     unicodeEncode,
@@ -278,4 +301,4 @@ export default {
     utf8Encode,
     utf8Decode,
     getZIndex
-};
+}

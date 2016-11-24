@@ -22,6 +22,10 @@ export default {
                     window.bus.$emit('openOnline', true)
                     break
 
+                case 'https':
+                    window.bus.$emit('openHttps')
+                    break
+
                 default:
             }
         }

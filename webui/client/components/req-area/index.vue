@@ -1,21 +1,23 @@
 <template>
 <div class="req-area">
     <ul class="req-bar">
-        <li v-for="n in nav" :class="n">{{n | camelCase('-', '-', false)}}</li>
+        <li v-for="n in nav" :class="n == '#' ? 'order' : n">{{n | camelCase('-', '-')}}</li>
     </ul>
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="req in matchUrl(sessionList)" @click="getDetail(req.id)" :class="[{selected: selected==req.id}, req.cls]">
+            <li v-for="req in matchUrl(sessionList)" @click="getDetail(req.id)" :class="[req.cls, {selected: selected == req.id}]">
                 <span class="order">{{req.id}}</span>
 
                 <span class="status">{{req.status}}</span>
 
                 <span class="protocol">{{req.protocol}}</span>
 
+                <span class="method">{{req.method}}</span>
+
                 <span class="host" v-bind:title="req.host">{{req.host}}</span>
 
-                <span class="url" v-bind:title="req.path">{{req.path}}</span>
+                <span class="path" v-bind:title="req.path">{{req.path}}</span>
 
                 <span class="content-type" v-bind:title="req.contentType">{{req.contentType}}</span>
 
@@ -37,7 +39,7 @@ import { mapGetters } from 'vuex'
 export default {
     data () {
         return {
-            nav: ['order', 'status', 'protocol', 'host', 'url', 'content-type', 'server-ip'],
+            nav: ['#', 'status', 'protocol', 'method', 'host', 'path', 'content-type', 'server-ip'],
 
             selected: -1,
 
@@ -57,6 +59,7 @@ export default {
                 return sessions;
             }
 
+            // todo: pattern match?
             return sessions.filter((s) => {
                 return s.url.indexOf(v) > -1
             })
