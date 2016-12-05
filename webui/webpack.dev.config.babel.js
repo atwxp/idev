@@ -4,13 +4,17 @@ import webpackConfig from './webpack.config.babel'
 
 import config from '../lib/config'
 
-const port = config.webpackPort || 8080;
-
-const compiler = webpack(webpackConfig)
-
-webpackConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:' + port + '/')
-
 export default function () {
+    const port = config.webpackPort || 8080;
+
+    webpackConfig.plugins.push(new webpack.DefinePlugin({
+        UIPORT: JSON.stringify(config.uiport)
+    }))
+
+    const compiler = webpack(webpackConfig)
+
+    webpackConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:' + port + '/')
+
     new webpackDevServer(compiler, {
         contentBase: 'webui/output/',
 

@@ -7,10 +7,12 @@
 </template>
 
 <script>
+import util from 'util'
+
 export default {
     data () {
         return {
-            tool: ['clear', 'replay', 'https', 'weinre', 'jsconsole','online']
+            tool: ['clear', 'replay', 'https', 'weinre', 'jsconsole', 'online']
         }
     },
 
@@ -19,11 +21,8 @@ export default {
 
             switch (m) {
                 case 'online':
-                    window.bus.$emit('openOnline', true)
-                    break
-
                 case 'https':
-                    window.bus.$emit('openHttps')
+                    window.bus.$emit('open' + util.capitalize(m), true)
                     break
 
                 default:

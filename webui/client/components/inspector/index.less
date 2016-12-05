@@ -49,8 +49,26 @@
         }
 
         .res-inspector-syntaxview {
+            position: relative;
             .callback-name {
                 color: #a00;
+            }
+
+            .res-inspector-syntaxview-tip {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                height: 20px;
+                line-height: 20px;
+                font-size: 12px;
+                cursor: pointer;
+                text-align: center;
+                background-color: #fbf9dd;
+                box-shadow: 0 1px 2px #d2d2d2;
+                &:hover {
+                    background: #efeee4;
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 import os from 'os'
+import fs from 'fs'
 import path from 'path'
 import io from 'socket.io'
 import express from 'express'
@@ -14,6 +15,9 @@ import config from '../lib/config'
 let app = express();
 const proxy = httpProxy.createProxyServer();
 
+const CERT_DIR = path.join(util.getHomeDir(), '.IdevData', 'certs')
+const ROOT_CRT_PATH = path.join(CERT_DIR, 'rootCA.crt')
+
 // run webui
 app.run = function () {
     // view engine =====================================
@@ -28,6 +32,10 @@ app.run = function () {
     // app.use('/api', routesAPI);
 
     // We only want to run the workflow when in dev
+    app.use('/cgi', (req, res) => {
+        res.sendFile(ROOT_CRT_PATH)
+    });
+
     if (config.debug) {
         webpackDevConfig();
 
@@ -64,10 +72,9 @@ app.run = function () {
 
         // webui error
         client.on('error', (err) => {
-            console.log('An error occurred!');
-            console.log(err);
+            console.log('An error occurred!', err);
         });
-    });
+    })
 
     console.log('webui server started on port ' + config.uiport);
 

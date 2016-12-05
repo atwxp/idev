@@ -30,7 +30,9 @@
                 {{resData.textview}}
             </div>
 
-            <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'"></div>
+            <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'">
+                <span class="res-inspector-syntaxview-tip" v-show="showSyntaxTip" @click="doSyntax">Response body can be syntax highlighting.Click to syntax on.</span>
+            </div>
 
             <div class="res-inspector-image" v-show="currentResView=='imageview'">
                 <img :src="resData.imageview" v-show="resData&&resData.imageview">
@@ -103,9 +105,13 @@ export default {
 
             resData: {},
 
+            session: {},
+
             currentReqView: 'headers',
 
-            currentResView: 'headers'
+            currentResView: 'headers',
+
+            showSyntaxTip: false
         }
     },
 
@@ -226,7 +232,11 @@ export default {
             this.$set(this.resData, 'textview', /^image\//i.test(session.contentType) ? '' : session.resBody)
         },
 
-        getResSyntaxview (session) {
+        doSyntax () {
+            this.showSyntaxTip = false
+
+            let session = this.session
+
             let rawText = session.resBody
 
             let syntaxview
@@ -356,12 +366,16 @@ export default {
                     me['get' + util.camelCase(v + '-' + nav.view)](session)
                 })
             })
+
+            this.showSyntaxTip = true
         }
     },
 
     created () {
         window.bus.$on('detailSession', (idx) => {
-            this.getInfo(this.sessionList[idx - 1])
+            this.session = this.sessionList[idx - 1]
+
+            this.getInfo(this.session)
         })
     }
 }

@@ -12,19 +12,30 @@
         <h5>IPV4:</h5>
         <p v-for="ip in network.ipv4">{{ip}}</p>
     </modal>
+
+    <modal :showing.sync="httpsModal" cls="https-modal" v-on:close="httpsModal=false">
+        <qrcode cls="qrcode-row" :value="httpsCAData" size="270"></qrcode>
+        <div class="intercept-row">
+            <input type="checkbox" name="itercept" id="intercept" v-model="isInterceptHttps" />
+            <label for="intercept">Intercept HTTPS CONNECT</label>
+        </div>
+    </modal>
 </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import socketClient from 'socket.io-client';
+import Vue from 'vue'
+import socketClient from 'socket.io-client'
 
-import ToolArea from 'components/tool-area';
-import ReqArea from 'components/req-area';
-import StatusArea from 'components/status-area';
+import ToolArea from 'components/tool-area'
+import ReqArea from 'components/req-area'
+import StatusArea from 'components/status-area'
 
-import Alert from 'ui/alert';
-import Modal from 'ui/modal';
+import Alert from 'ui/alert'
+import Modal from 'ui/modal'
+import Qrcode from 'ui/qrcode'
+
+import config from '../../lib/config'
 
 import { mapActions } from 'vuex'
 
@@ -35,7 +46,10 @@ export default {
     data () {
         return {
             network: {},
-            onlineModal: false
+            onlineModal: false,
+            httpsModal: false,
+            httpsCAData: '',
+            isInterceptHttps: false
         }
     },
 
@@ -44,29 +58,39 @@ export default {
         ReqArea,
         StatusArea,
         Alert,
-        Modal
+        Modal,
+        Qrcode
     },
 
-    created () {
-        // todo: replace 8889 too uiport
-        var url = 'http://' + location.hostname + ':8889/';
+    mounted () {
+        // CAUrl:
+        // - http://localhost:8888/cgi
+        // - http://localhost:8889/cgi(choose)
+        // - http://ip:8888/cgi
+        // - http://ip:8889/cgi
+        this.httpsCAData = 'http://localhost:' + UIPORT + '/cgi';
 
-        const socket = socketClient(url);
+        const socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
 
         // 监听到请求后更新到 webui 的 req-area, status-area
         socket.on('reqArrival', (data) => {
             data && this.addSession(data);
-        });
+        })
 
         // 获取 IP 端口网络信息，通知到 tool-area 的 online 选项
         socket.on('join', (data) => {
             this.network = data;
-        });
+        })
 
         // show online info
         window.bus.$on('openOnline', (val) => {
             this.onlineModal = val
-        });
+        })
+
+        // show https qrcode
+        window.bus.$on('openHttps', (val) => {
+            this.httpsModal = val
+        })
     },
 
     methods: mapActions([
