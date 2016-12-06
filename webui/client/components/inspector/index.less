@@ -49,13 +49,16 @@
         }
 
         .res-inspector-syntaxview {
-            position: relative;
+            // position: relative;
+
             .callback-name {
                 color: #a00;
             }
 
             .res-inspector-syntaxview-tip {
-                position: absolute;
+                position: -webkit-sticky;
+                position: sticky;
+                display: block;
                 left: 0;
                 top: 0;
                 right: 0;

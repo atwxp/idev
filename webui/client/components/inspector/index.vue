@@ -32,6 +32,7 @@
 
             <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'">
                 <span class="res-inspector-syntaxview-tip" v-show="showSyntaxTip" @click="doSyntax">Response body can be syntax highlighting.Click to syntax on.</span>
+                <div data-role="res-inspector-syntaxview"></div>
             </div>
 
             <div class="res-inspector-image" v-show="currentResView=='imageview'">
@@ -232,6 +233,16 @@ export default {
             this.$set(this.resData, 'textview', /^image\//i.test(session.contentType) ? '' : session.resBody)
         },
 
+        getResSyntaxview (session) {
+            this.showSyntaxTip = !!session.resBody
+
+            !this.showSyntaxTip && this.clearSyntax()
+        },
+
+        clearSyntax () {
+            this.$el.querySelector('[data-role=res-inspector-syntaxview]').innerHTML = ''
+        },
+
         doSyntax () {
             this.showSyntaxTip = false
 
@@ -349,9 +360,9 @@ export default {
                     syntaxview = ''
             }
 
-            this.$el.querySelector('.res-inspector-syntaxview').innerHTML = ''
+            this.clearSyntax()
 
-            syntaxview && this.$el.querySelector('.res-inspector-syntaxview').appendChild(util.createNode(syntaxview))
+            syntaxview && this.$el.querySelector('[data-role=res-inspector-syntaxview]').appendChild(util.createNode(syntaxview))
         },
 
         getResImageview (session) {
@@ -363,11 +374,11 @@ export default {
 
             ['req', 'res'].forEach((v) => {
                 me[v + 'Nav'].forEach((nav) => {
-                    me['get' + util.camelCase(v + '-' + nav.view)](session)
+                    let func = me['get' + util.camelCase(v + '-' + nav.view)]
+
+                    func && util.type(func) === 'function' && func(session)
                 })
             })
-
-            this.showSyntaxTip = true
         }
     },
 

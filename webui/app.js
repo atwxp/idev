@@ -32,7 +32,7 @@ app.run = function () {
     // app.use('/api', routesAPI);
 
     // We only want to run the workflow when in dev
-    app.use('/cgi', (req, res) => {
+    app.use('/cgi/rootCA', (req, res) => {
         res.sendFile(ROOT_CRT_PATH)
     });
 
@@ -63,17 +63,21 @@ app.run = function () {
             hostname: os.hostname(),
             port: config.port,
             ipv4: util.getIpList()
-        });
+        })
+
+        client.on('interceptHttps', (val) => {
+            config.interceptHttps = val
+        })
 
         // webui close
         client.on('disconnect', () => {
             console.log('client disconnect, ooops!');
-        });
+        })
 
         // webui error
         client.on('error', (err) => {
             console.log('An error occurred!', err);
-        });
+        })
     })
 
     console.log('webui server started on port ' + config.uiport);

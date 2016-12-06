@@ -33,18 +33,18 @@ import StatusArea from 'components/status-area'
 
 import Alert from 'ui/alert'
 import Modal from 'ui/modal'
-import Qrcode from 'ui/qrcode'
 
-import config from '../../lib/config'
+import Qrcode from 'v-qrcode/src/index'
 
 import { mapActions } from 'vuex'
 
 // global data bus
-window.bus = new Vue();
+window.bus = new Vue()
 
 export default {
     data () {
         return {
+            socket: null,
             network: {},
             onlineModal: false,
             httpsModal: false,
@@ -62,15 +62,17 @@ export default {
         Qrcode
     },
 
-    mounted () {
-        // CAUrl:
-        // - http://localhost:8888/cgi
-        // - http://localhost:8889/cgi(choose)
-        // - http://ip:8888/cgi
-        // - http://ip:8889/cgi
-        this.httpsCAData = 'http://localhost:' + UIPORT + '/cgi';
+    watch: {
+        isInterceptHttps (val) {
+            this.socket.emit('interceptHttps', val)
+        }
+    },
 
-        const socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
+    mounted () {
+        // - http://ip:8889/cgi/rootCA
+        this.httpsCAData = 'http://' + location.hostname+ ':' + UIPORT + '/cgi/rootCA';
+
+        const socket = this.socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
 
         // 监听到请求后更新到 webui 的 req-area, status-area
         socket.on('reqArrival', (data) => {
