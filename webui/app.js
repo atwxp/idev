@@ -65,8 +65,14 @@ app.run = function () {
             ipv4: util.getIpList()
         })
 
+        // webui enable intercept https
         client.on('interceptHttps', (val) => {
             config.interceptHttps = val
+        })
+
+        // webui enable responder
+        client.on('enableRespond', (val) => {
+            config.enableRespond = val
         })
 
         // webui close

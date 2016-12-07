@@ -1,7 +1,7 @@
 <template>
 <div class="wizard">
     <div>
-        <textarea class="form-control raw-text" name="raw" v-model="rawText" placeholder="粘贴需要进行编码转换的字符串"></textarea>
+        <textarea class="form-textarea raw-text" name="raw" v-model="rawText" placeholder="粘贴需要进行编码转换的字符串"></textarea>
     </div>
 
     <form action="#" data-role="enctype-form">
@@ -33,13 +33,13 @@
         </ul>
 
         <div class="btns">
-            <button type="button" class="btn" name="convert" @click="convert()">转换</button>
-            <button type="button" class="btn btn-clear" name="clear" @click="clear()">清空</button>
+            <button type="button" class="form-btn btn-convert" name="convert" @click="convert()">转换</button>
+            <button type="button" class="form-btn btn-clear" name="clear" @click="clear()">清空</button>
         </div>
     </form>
 
     <div>
-        <textarea class="form-control result-text" name="result" v-model="resultText"></textarea>
+        <textarea class="form-textarea result-text" name="result" v-model="resultText"></textarea>
     </div>
 </div>
 </template>

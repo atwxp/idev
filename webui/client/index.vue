@@ -69,7 +69,7 @@ export default {
     },
 
     mounted () {
-        // - http://ip:8889/cgi/rootCA
+        // http://ip:8889/cgi/rootCA
         this.httpsCAData = 'http://' + location.hostname+ ':' + UIPORT + '/cgi/rootCA';
 
         const socket = this.socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
@@ -79,7 +79,7 @@ export default {
             data && this.addSession(data);
         })
 
-        // 获取 IP 端口网络信息，通知到 tool-area 的 online 选项
+        // 获取 IP 端口网络信息，通知到 tool-area 的 online
         socket.on('join', (data) => {
             this.network = data;
         })
@@ -92,6 +92,11 @@ export default {
         // show https qrcode
         window.bus.$on('openHttps', (val) => {
             this.httpsModal = val
+        })
+
+        // tell proxy responder is enabled
+        window.bus.$on('enableRespond', (val) => {
+            this.socket.emit('enableRespond', val)
         })
     },
 

@@ -1,0 +1,83 @@
+@import '../../util/mixin.less';
+
+.rule-item {
+    & + & {
+        margin-top: 5px;
+    }
+
+    font-size: 12px;
+    line-height: 15px;
+
+    > [type=checkbox] {
+        float: left;
+        margin-top: 2px;
+        margin-right: 6px;
+    }
+
+    > label {
+        display: block;
+        overflow: hidden;
+        color: #333;
+        > span {
+            display: inline-block;
+            vertical-align: middle;
+            max-width: 45%;
+            margin: 0 4px;
+            .single-line();
+        }
+    }
+    &:hover {
+        > label {
+            background: #f3f1f1;
+        }
+    }
+
+    &.rule-active {
+        > label {
+            background: #13b5b1;
+            color: #fff;
+        }
+        > .rule-delete {
+            &::before,
+            &::after {
+                background-color: #fff;
+            }
+        }
+    }
+
+    > .rule-delete {
+        float: right;
+        position: relative;
+        margin-top: -16px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-style: normal;
+        transition: transform .5s;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 2px;
+            height: 10px;
+            margin: auto;
+            background-color: #000;
+            .box-sizing(border-box);
+        }
+        &::before {
+            .transform(rotate(-45deg));
+        }
+        &::after {
+            .transform(rotate(45deg));
+        }
+        &:hover {
+            .transform(rotate(180deg));
+        }
+    }
+}

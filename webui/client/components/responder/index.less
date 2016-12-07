@@ -1,0 +1,88 @@
+.responder {
+    font-size: 12px;
+    padding: 10px;
+
+    @h: 28px;
+    @margin: 8px;
+
+    > div + div {
+        margin-top: 20px;
+    }
+
+    .responder-action {
+        > .form-btn {
+            margin-left: 10px;
+            padding: 4px;
+        }
+    }
+
+    .responder-editor {
+        position: relative;
+        font-size: 0;
+        border: 1px solid #eee;
+        padding: 10px;
+        &::before {
+            content: 'Rule Editor';
+            position: absolute;
+            height: 18px;
+            line-height: 18px;
+            left: 10px;
+            top: -9px;
+            font-size: 12px;
+            background-color: #fff;
+            color: #ccc;
+        }
+
+        > span {
+            display: inline-block;
+        }
+
+        .responder-editor-input {
+            width: 80%;
+            margin-right: 20px;
+
+            > input {
+                height: @h;
+                line-height: @h;
+
+                & + input {
+                    margin-top: @margin;
+                }
+            }
+        }
+
+        .responder-editor-op {
+            > button {
+                display: block;
+                height: @h;
+
+                & + button {
+                    margin-top: @margin;
+                }
+            }
+        }
+    }
+
+    .responder-list {
+        position: relative;
+        border: 1px solid #eee;
+        padding: 10px;
+
+        &::before {
+            content: 'Rule List';
+            position: absolute;
+            height: 18px;
+            line-height: 18px;
+            left: 10px;
+            top: -9px;
+            font-size: 12px;
+            background-color: #fff;
+            color: #ccc;
+        }
+
+        > ul {
+            height: 400px;
+            overflow: auto;
+        }
+    }
+}
