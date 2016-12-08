@@ -1,6 +1,6 @@
 <template>
     <li :class="['rule-item', {'rule-active': rule.active}]" v-on:mouseenter="rule.showDel=true" v-on:mouseleave="rule.showDel=false">
-        <input type="checkbox" name="rule" v-model="rule.checked"/>
+        <input type="checkbox" name="rule" v-model="rule.checked" @change="checkedRule"/>
 
         <label @click="activeRule">
             <span>{{rule.pattern}}</span>|<span>{{rule.respond}}</span>
@@ -14,7 +14,13 @@
 export default {
     props: ['rule'],
 
+
+
     methods: {
+        checkedRule () {
+            this.$emit('checkedRule', this.rule, true)
+        },
+
         activeRule () {
             this.$emit('activeRule', this.rule)
         },

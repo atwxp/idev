@@ -12,20 +12,33 @@
     </div>
 
     <div class="responder-editor">
-        <span class="responder-editor-input">
+        <div class="responder-editor-input">
             <input class="form-input" placeholder="your custom pattern" type="text" v-model="curRule.pattern">
-            <input class="form-input" placeholder="your custom responder" type="text" v-model="curRule.respond">
-        </span>
 
-        <span class="responder-editor-op">
+            <div class="responder-editor-respond">
+                <input class="form-input" placeholder="your custom responder" type="text" v-model="curRule.respond">
+
+                <i class="icon-arrow" @click="toggleSelect"></i>
+
+                <ul class="responder-editor-select" v-show="showSelect">
+                    <li v-for="item in options" @click="doSelect(item)">
+                        <input type="file" v-show="item.label === 'file'" @click="clearSelect" @change="selectFile" />
+
+                        <span class="responder-editor-option">{{item.value}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="responder-editor-op">
             <button class="form-btn">Test</button>
-            <button class="form-btn" @click="saveRule">Save</button>
-        </span>
+            <button class="form-btn" @click="saveRule(curRule)">Save</button>
+        </div>
     </div>
 
     <div class="responder-list">
         <ul>
-            <rule-item v-for="rule in ruleList" :rule="rule" v-on:activeRule="activeRule" v-on:deleteRule="deleteRule"></rule-item>
+            <rule-item v-for="rule in ruleList" :rule="rule" v-on:checkedRule="saveRule" v-on:activeRule="activeRule" v-on:deleteRule="deleteRule"></rule-item>
         </ul>
     </div>
 </div>
@@ -38,6 +51,30 @@ import util from 'util'
 export default {
     data () {
         return {
+            options: [
+                {
+                    value: 'script with response',
+                    label: 'script'
+                },
+
+                {
+                    value: 'Find a file...',
+                    label: 'file'
+                },
+
+                {
+                    value: '200_Plain',
+                    label: '200'
+                },
+
+                {
+                    value: '404_Plain',
+                    label: '404'
+                }
+            ],
+
+            showSelect: false,
+
             enabled: false,
 
             ruleList: [],
@@ -49,38 +86,57 @@ export default {
     watch: {
         enabled (val) {
             window.bus.$emit('enableRespond', val)
+        },
+
+        ruleList (val) {
+            window.bus.$emit('updateRule', val);
         }
     },
 
     methods: {
-        saveRule (e, rule) {
+        importRule () {
+
+        },
+
+        // todo: rule重复怎么办
+        saveRule (rule, notClear = false) {
             rule = rule || this.curRule
 
             if (!rule.pattern && ! rule.respond) {
                 return
             }
 
-            let trule
+            let idx
+            let newRule
 
             if (rule.id) {
-                trule = this.ruleList.filter((r) => {
-                    return r.id == rule.id
+                this.ruleList.filter((r, i) => {
+                    if (r.id === rule.id) {
+                        idx = i
+                        return true
+                    }
                 })
             }
 
-            if (trule && trule[0]) {
-                util.extend(trule[0], rule)
+            if (idx !== undefined) {
+                newRule = Object.assign(this.ruleList[idx], rule)
+
+                this.ruleList.splice(idx, 1, newRule)
             }
+
             else {
-                this.ruleList.push(util.extend({
+                newRule = util.extend({
                     id: util.gid(),
                     active: false,
                     checked: false,
                     showDel: false
-                }, rule));
+                }, rule)
+                this.ruleList.push(newRule);
             }
 
-            this.curRule = {}
+            !notClear && (this.curRule = {})
+
+            return newRule
         },
 
         activeRule (rule) {
@@ -107,18 +163,44 @@ export default {
 
         addRule () {
             let r = {
-                id: util.gid(),
                 pattern: 'http://example.com',
                 respond: ''
             }
 
-            this.saveRule(null, r)
-
-            this.activeRule(r)
+            this.activeRule(this.saveRule(r))
         },
 
-        importRule () {
+        toggleSelect () {
+            this.showSelect = !this.showSelect
+        },
 
+        clearSelect (e) {
+            e.currentTarget.value = ''
+        },
+
+// todo:
+        selectFile (e) {
+            let files = e.target.files
+
+            let file = files && files[0]
+
+            this.curRule = Object.assign({}, this.curRule, {
+                respond: file.name
+            })
+        },
+
+        doSelect (sop) {
+            switch (sop.label) {
+                case 'script':
+                    break
+
+                case 'file':
+                    break
+
+                default:
+            }
+
+            this.showSelect = false
         }
     },
 

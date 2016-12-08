@@ -17,7 +17,7 @@
 
         <div class="modal-footer" v-if="!hideCloseBtn">
             <slot name="footer">
-                <button class="btn" @click="close">关闭</button>
+                <button class="form-btn" @click="close">关闭</button>
             </slot>
         </div>
     </div>

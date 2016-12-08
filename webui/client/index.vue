@@ -94,9 +94,14 @@ export default {
             this.httpsModal = val
         })
 
-        // tell proxy responder is enabled
+        // tell webui app responder is enabled
         window.bus.$on('enableRespond', (val) => {
             this.socket.emit('enableRespond', val)
+        })
+
+        // tell webui app rule change
+        window.bus.$on('updateRule', (ruleList) => {
+            this.socket.emit('updateRule', ruleList);
         })
     },
 

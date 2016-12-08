@@ -18,6 +18,8 @@ const proxy = httpProxy.createProxyServer();
 const CERT_DIR = path.join(util.getHomeDir(), '.IdevData', 'certs')
 const ROOT_CRT_PATH = path.join(CERT_DIR, 'rootCA.crt')
 
+const RULE_DIR = path.join(util.getHomeDir(), '.IdevData', 'rules');
+
 // run webui
 app.run = function () {
     // view engine =====================================
@@ -73,6 +75,11 @@ app.run = function () {
         // webui enable responder
         client.on('enableRespond', (val) => {
             config.enableRespond = val
+        })
+
+        // update rule
+        client.on('updateRule', (ruleList) => {
+            config.ruleList = ruleList
         })
 
         // webui close

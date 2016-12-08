@@ -78,6 +78,7 @@
     "socket.io-client": "^1.5.0",
     "v-qrcode": "^1.0.1",
     "vue": "^2.0.1",
+    "vue-select": "^1.3.3",
     "vuex": "^2.0.0"
   }
 }
