@@ -8,15 +8,20 @@
 
     <modal :showing.sync="onlineModal" cls="online-modal" v-on:close="onlineModal=false">
         <h5>Hostname: {{network.hostname}}</h5>
+
         <h5>Port: {{network.port}}</h5>
+
         <h5>IPV4:</h5>
+
         <p v-for="ip in network.ipv4">{{ip}}</p>
     </modal>
 
     <modal :showing.sync="httpsModal" cls="https-modal" v-on:close="httpsModal=false">
         <qrcode cls="qrcode-row" :value="httpsCAData" size="270"></qrcode>
+
         <div class="intercept-row">
             <input type="checkbox" name="itercept" id="intercept" v-model="isInterceptHttps" />
+
             <label for="intercept">Intercept HTTPS CONNECT</label>
         </div>
     </modal>
@@ -70,18 +75,18 @@ export default {
 
     mounted () {
         // http://ip:8889/cgi/rootCA
-        this.httpsCAData = 'http://' + location.hostname+ ':' + UIPORT + '/cgi/rootCA';
+        this.httpsCAData = 'http://' + location.hostname + ':' + UIPORT + '/cgi/rootCA';
 
         const socket = this.socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
 
         // 监听到请求后更新到 webui 的 req-area, status-area
         socket.on('reqArrival', (data) => {
-            data && this.addSession(data);
+            data && this.addSession(data)
         })
 
         // 获取 IP 端口网络信息，通知到 tool-area 的 online
         socket.on('join', (data) => {
-            this.network = data;
+            this.network = data
         })
 
         // show online info
@@ -101,7 +106,7 @@ export default {
 
         // tell webui app rule change
         window.bus.$on('updateRule', (ruleList) => {
-            this.socket.emit('updateRule', ruleList);
+            this.socket.emit('updateRule', ruleList)
         })
     },
 

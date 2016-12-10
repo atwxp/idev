@@ -1,9 +1,9 @@
 import program from 'commander'
 
 import pkgConfig from '../package.json'
-import index from '../index'
+import main from '../index'
 
-let started = false;
+let started = false
 
 function getOptions() {
     let obj = {}
@@ -19,33 +19,32 @@ function getOptions() {
 
 program
     .version(pkgConfig.version)
-    .usage('<Command> [Options]');
+    .usage('<Command> [Options]')
 
 program
     .option('-p, --port [port]', pkgConfig.port + ' by default')
-    .option('--debug', 'debug webui');
+    .option('--debug', 'debug webui')
 
 program
     .command('help')
     .description('Display help information')
     .action(() => {
-        started = true;
-        program.help();
-    });
+        started = true
+        program.help()
+    })
 program
     .command('start')
     .description('start debugger')
     .action(() => {
-        started = true;
-    });
+        started = true
+    })
 
-program.parse(process.argv);
+program.parse(process.argv)
 
 if (!started) {
     console.log('type [idev start] to start debug.')
 }
 
 else {
-    index(getOptions());
+    main(getOptions())
 }
-

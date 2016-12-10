@@ -6,38 +6,50 @@ import express from 'express'
 import httpProxy from 'http-proxy'
 import bodyParser from 'body-parser'
 
-import routesAPI from './api/index'
+import routesAPI from './api/router'
 import webpackDevConfig from './webpack.dev.config.babel'
 
 import util from '../lib/util'
 import config from '../lib/config'
 
-let app = express();
-const proxy = httpProxy.createProxyServer();
-
-const CERT_DIR = path.join(util.getHomeDir(), '.IdevData', 'certs')
-const ROOT_CRT_PATH = path.join(CERT_DIR, 'rootCA.crt')
-
-const RULE_DIR = path.join(util.getHomeDir(), '.IdevData', 'rules');
+let app = express()
+const proxy = httpProxy.createProxyServer()
 
 // run webui
 app.run = function () {
     // view engine =====================================
-    app.set('view engine', 'html');
+    app.set('view engine', 'html')
 
     // Middleware config =====================================
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: false}));
-    app.use(express.static(path.join(__dirname, 'output')));
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({extended: false}))
+    app.use(express.static(path.join(__dirname, 'output')))
 
-    // routes =====================================
-    // app.use('/api', routesAPI);
+    // 设置跨域访问
+    app.all('*', function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*')
 
-    // We only want to run the workflow when in dev
-    app.use('/cgi/rootCA', (req, res) => {
-        res.sendFile(ROOT_CRT_PATH)
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild')
+
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+
+        if (req.method === 'OPTIONS') {
+            res.send(200)
+        }
+
+        else {
+            next()
+        }
     });
 
+    // routes =====================================
+    app.use('/api', routesAPI)
+
+    app.use('/cgi/rootCA', (req, res) => {
+        res.sendFile(path.join(config.dataDir, 'certs', 'rootCA.crt'))
+    });
+
+    // We only want to run the workflow when in dev
     if (config.debug) {
         webpackDevConfig();
 

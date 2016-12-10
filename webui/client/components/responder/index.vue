@@ -2,7 +2,8 @@
 <div class="responder">
     <div class="responder-action">
         <span>
-            <input type="checkbox" name="enable-rule" id="enable-rule" v-model="enabled" />
+            <input type="checkbox" id="enable-rule" v-model="enabled" />
+
             <label for="enable-rule">Enable Rules</label>
         </span>
 
@@ -22,7 +23,7 @@
 
                 <ul class="responder-editor-select" v-show="showSelect">
                     <li v-for="item in options" @click="doSelect(item)">
-                        <input type="file" v-show="item.label === 'file'" @click="clearSelect" @change="selectFile" />
+                        <input type="file" @click="clearSelect" @change="selectFile" v-show="item.label === 'file'"/>
 
                         <span class="responder-editor-option">{{item.value}}</span>
                     </li>
@@ -32,21 +33,26 @@
 
         <div class="responder-editor-op">
             <button class="form-btn">Test</button>
+
             <button class="form-btn" @click="saveRule(curRule)">Save</button>
         </div>
     </div>
 
     <div class="responder-list">
         <ul>
-            <rule-item v-for="rule in ruleList" :rule="rule" v-on:checkedRule="saveRule" v-on:activeRule="activeRule" v-on:deleteRule="deleteRule"></rule-item>
+            <rule-item v-for="rule in ruleList" :rule="rule"
+                v-on:checkedRule="saveRule"
+                v-on:activeRule="activeRule"
+                v-on:deleteRule="deleteRule"
+            ></rule-item>
         </ul>
     </div>
 </div>
 </template>
 
 <script>
-import RuleItem from 'components/rule-item'
 import util from 'util'
+import RuleItem from 'components/rule-item'
 
 export default {
     data () {
@@ -98,11 +104,11 @@ export default {
 
         },
 
-        // todo: rule重复怎么办
+        // todo: repeated rule should be filter or do nothing??
         saveRule (rule, notClear = false) {
             rule = rule || this.curRule
 
-            if (!rule.pattern && ! rule.respond) {
+            if (!rule.pattern.trim() && ! rule.respond.trim()) {
                 return
             }
 
@@ -178,14 +184,44 @@ export default {
             e.currentTarget.value = ''
         },
 
-// todo:
         selectFile (e) {
             let files = e.target.files
 
             let file = files && files[0]
 
-            this.curRule = Object.assign({}, this.curRule, {
-                respond: file.name
+            let formData = new FormData()
+
+            formData.append('localFile', file)
+
+            this.$http.post('/api/getFilePath', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then((response) => {
+                try {
+                    response = JSON.parse(response.body)
+                }
+                catch (e) {
+                    response = {}
+                }
+
+                // {
+                //     fieldName: 'your field name',
+                //     originalFilename: 'filename.json',
+                //     // options.uploadDir || os.tmpdir()(/var/folders/xh/zjcqwpfs70zd3b4dt9lz5m500000gn/T/)
+                //     path: '/var/folders/xh/zjcqwpfs70zd3b4dt9lz5m500000gn/T/4JHmEH7UdxI3eWUkRcj5kph1.json',
+                //     headers: {
+                //         'content-disposition': 'form-data; name="your field name"; filename="filename.json"',
+                //         'content-type': 'application/json'
+                //     },
+                //     size: 18948
+                // }
+
+                this.curRule = Object.assign({}, this.curRule, {
+                    respond: file.name,
+                    filepath: response.path
+                })
+
             })
         },
 
