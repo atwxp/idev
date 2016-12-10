@@ -28,12 +28,12 @@ export default {
                 {
                     view: 'inspector',
                     text: 'inspector',
-                    isActive: true
+                    isActive: false
                 },
                 {
                     view: 'responder',
                     text: 'auto-responder',
-                    isActive: false
+                    isActive: true
                 },
                 {
                     view: 'composer',
@@ -52,7 +52,7 @@ export default {
                 }
             ],
 
-            currentView: 'inspector'
+            currentView: 'responder'
         }
     },
 

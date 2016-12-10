@@ -1,6 +1,7 @@
 import os from 'os'
 import fs from 'fs'
 import path from 'path'
+import fse from 'fs-extra'
 import io from 'socket.io'
 import express from 'express'
 import httpProxy from 'http-proxy'
@@ -17,6 +18,16 @@ const proxy = httpProxy.createProxyServer()
 
 // run webui
 app.run = function () {
+    let uiConfigFilePath = path.join(config.dataDir, 'config.json')
+
+    fse.ensureFileSync(uiConfigFilePath)
+
+    let uiConfig = fse.readJsonSync(uiConfigFilePath, {throws: false})
+
+    uiConfig = uiConfig || {}
+
+    Object.assign(config, uiConfig)
+
     // view engine =====================================
     app.set('view engine', 'html')
 
@@ -61,7 +72,7 @@ app.run = function () {
     }
     else {
         app.use((req, res) => {
-            res.sendFile(path.join(__dirname, 'output', 'index.html'));
+            res.sendFile(path.join(__dirname, 'output', 'index.html'))
         });
     }
 
@@ -79,19 +90,14 @@ app.run = function () {
             ipv4: util.getIpList()
         })
 
-        // webui enable intercept https
-        client.on('interceptHttps', (val) => {
-            config.interceptHttps = val
-        })
+        client.on('updateConfig', (cfg) => {
+            Object.assign(config, cfg)
 
-        // webui enable responder
-        client.on('enableRespond', (val) => {
-            config.enableRespond = val
-        })
-
-        // update rule
-        client.on('updateRule', (ruleList) => {
-            config.ruleList = ruleList
+            fse.outputJson(uiConfigFilePath, Object.assign(uiConfig, cfg), (err) => {
+                if (err) {
+                    console.log('write config err!')
+                }
+            })
         })
 
         // webui close

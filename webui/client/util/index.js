@@ -14,7 +14,7 @@ function type(o) {
 }
 
 function gid() {
-    return 'xxxx'.replace(/x/g, () => {
+    return 'xxxxxx'.replace(/x/g, () => {
         return (Math.random() * 16 | 0).toString(16);
     });
 }

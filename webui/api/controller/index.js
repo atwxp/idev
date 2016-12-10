@@ -76,6 +76,16 @@ let getFilePath = function (req, res, next) {
     form.parse(req)
 }
 
+let getUiConfig = function (req, res, next) {
+    let uiConfigFilePath = path.join(config.dataDir, 'config.json')
+
+    fse.ensureFileSync(uiConfigFilePath)
+
+    res.sendFile(uiConfigFilePath)
+}
+
 export default {
-    getFilePath
+    getFilePath,
+
+    getUiConfig
 }

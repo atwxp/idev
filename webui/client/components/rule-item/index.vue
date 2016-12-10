@@ -14,8 +14,6 @@
 export default {
     props: ['rule'],
 
-
-
     methods: {
         checkedRule () {
             this.$emit('checkedRule', this.rule, true)

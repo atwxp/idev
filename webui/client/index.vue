@@ -20,7 +20,7 @@
         <qrcode cls="qrcode-row" :value="httpsCAData" size="270"></qrcode>
 
         <div class="intercept-row">
-            <input type="checkbox" name="itercept" id="intercept" v-model="isInterceptHttps" />
+            <input type="checkbox" name="itercept" id="intercept" v-model="interceptHttps" />
 
             <label for="intercept">Intercept HTTPS CONNECT</label>
         </div>
@@ -42,6 +42,7 @@ import Modal from 'ui/modal'
 import Qrcode from 'v-qrcode/src/index'
 
 import { mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 // global data bus
 window.bus = new Vue()
@@ -50,12 +51,35 @@ export default {
     data () {
         return {
             socket: null,
+
             network: {},
+
             onlineModal: false,
+
             httpsModal: false,
-            httpsCAData: '',
-            isInterceptHttps: false
+
+            httpsCAData: ''
         }
+    },
+
+    computed: {
+        interceptHttps: {
+            get () {
+                return this.uiconfig.interceptHttps
+            },
+
+            set (newVal) {
+                this.updateUiConfig({
+                    interceptHttps: newVal
+                })
+
+                window.bus.$emit('updateConfig', {
+                    interceptHttps: newVal
+                })
+            }
+        },
+
+        ...mapGetters(['uiconfig'])
     },
 
     components: {
@@ -67,13 +91,18 @@ export default {
         Qrcode
     },
 
-    watch: {
-        isInterceptHttps (val) {
-            this.socket.emit('interceptHttps', val)
-        }
+    methods: {
+        ...mapActions([
+            'addSession',
+            'updateUiConfig'
+        ])
     },
 
-    mounted () {
+    created () {
+        this.$http.get('/api/getUiConfig').then((res) => {
+            this.updateUiConfig(res && res.body || {})
+        })
+
         // http://ip:8889/cgi/rootCA
         this.httpsCAData = 'http://' + location.hostname + ':' + UIPORT + '/cgi/rootCA';
 
@@ -99,20 +128,10 @@ export default {
             this.httpsModal = val
         })
 
-        // tell webui app responder is enabled
-        window.bus.$on('enableRespond', (val) => {
-            this.socket.emit('enableRespond', val)
+        window.bus.$on('updateConfig', (val) => {
+            this.socket.emit('updateConfig', val)
         })
-
-        // tell webui app rule change
-        window.bus.$on('updateRule', (ruleList) => {
-            this.socket.emit('updateRule', ruleList)
-        })
-    },
-
-    methods: mapActions([
-        'addSession'
-    ])
+    }
 };
 </script>
 

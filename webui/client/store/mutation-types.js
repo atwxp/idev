@@ -1,1 +1,3 @@
 export const ADD_SESSION = 'ADD_SESSION'
+
+export const UPDATE_UICONFIG = 'UPDATE_UICONFIG'

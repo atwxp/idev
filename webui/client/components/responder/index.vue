@@ -2,7 +2,7 @@
 <div class="responder">
     <div class="responder-action">
         <span>
-            <input type="checkbox" id="enable-rule" v-model="enabled" />
+            <input type="checkbox" id="enable-rule" v-model="enableRule" />
 
             <label for="enable-rule">Enable Rules</label>
         </span>
@@ -54,6 +54,9 @@
 import util from 'util'
 import RuleItem from 'components/rule-item'
 
+import { mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
     data () {
         return {
@@ -81,25 +84,53 @@ export default {
 
             showSelect: false,
 
-            enabled: false,
-
-            ruleList: [],
-
             curRule: {}
         }
     },
 
-    watch: {
-        enabled (val) {
-            window.bus.$emit('enableRespond', val)
+    computed: {
+        enableRule: {
+            get () {
+                return this.uiconfig.enableRule
+            },
+
+            set (newVal) {
+                this.updateUiConfig({
+                    enableRule: newVal
+                })
+
+                window.bus.$emit('updateConfig', {
+                    enableRule: newVal
+                })
+            }
         },
 
-        ruleList (val) {
-            window.bus.$emit('updateRule', val);
-        }
+        ruleList: {
+            get () {
+                return this.uiconfig.ruleList
+            },
+
+            set (newVal) {
+                console.log('haha')
+
+                this.updateUiConfig({
+                    ruleList: newVal
+                })
+
+                window.bus.$emit('updateConfig', {
+                    ruleList: newVal
+                })
+            }
+        },
+
+        ...mapGetters(['uiconfig'])
     },
 
     methods: {
+        ...mapActions([
+            'updateUiConfig'
+        ]),
+
         importRule () {
 
         },
@@ -108,41 +139,35 @@ export default {
         saveRule (rule, notClear = false) {
             rule = rule || this.curRule
 
-            if (!rule.pattern.trim() && ! rule.respond.trim()) {
+            if (
+                !rule.pattern || !rule.pattern.trim()
+                || !rule.respond || !rule.respond.trim()
+            ) {
                 return
             }
 
-            let idx
-            let newRule
+            let newRule = {}
 
             if (rule.id) {
-                this.ruleList.filter((r, i) => {
-                    if (r.id === rule.id) {
-                        idx = i
-                        return true
-                    }
-                })
-            }
-
-            if (idx !== undefined) {
-                newRule = Object.assign(this.ruleList[idx], rule)
-
-                this.ruleList.splice(idx, 1, newRule)
+                newRule[rule.id] = Object.assign(this.ruleList[rule.id], rule)
             }
 
             else {
-                newRule = util.extend({
+                rule = util.extend({
                     id: util.gid(),
                     active: false,
                     checked: false,
                     showDel: false
                 }, rule)
-                this.ruleList.push(newRule);
+
+                newRule[rule.id] = rule
             }
+
+            this.ruleList = Object.assign({}, this.ruleList, newRule)
 
             !notClear && (this.curRule = {})
 
-            return newRule
+            return newRule[rule.id || newRule.id]
         },
 
         activeRule (rule) {
@@ -152,15 +177,16 @@ export default {
                 respond: rule.respond
             }
 
-            this.ruleList.forEach((r) => {
-                r.active = rule.id === r.id
+            Object.keys(this.ruleList).forEach((k) => {
+                this.ruleList[k].active = this.ruleList[k].id == rule.id
             })
         },
 
         deleteRule (rule) {
-            let idx = this.ruleList.indexOf(rule)
 
-            this.ruleList.splice(idx, 1)
+            this.$delete(this.ruleList, rule.id)
+
+            this.ruleList = Object.assign({}, this.ruleList)
 
             if (this.curRule.id === rule.id) {
                 this.curRule = {}
