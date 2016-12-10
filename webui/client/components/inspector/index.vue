@@ -27,7 +27,18 @@
             <inspector-table type="res-inspector-headers" v-show="currentResView=='headers'" :info="resData.headers"></inspector-table>
 
             <div class="res-inspector-textview" v-show="currentResView=='textview'">
-                {{resData.textview}}
+                <textarea :class="editing ? 'focus' : ''" data-role="res-inspector-textview-textarea" v-model="editValue" :readOnly="!editing"></textarea>
+
+                <div class="res-inspector-textview-editor">
+                    <span v-show="this.editing" @click="saveResponse">
+                        <i>Save</i>
+                    </span>
+
+                    <span>
+                        <i v-show="!this.editing&&resData.textview" @click="editResponse">Edit</i>
+                        <i v-show="this.editing" @click="cancelResponse">Cancel</i>
+                    </span>
+                </div>
             </div>
 
             <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'">
@@ -112,14 +123,30 @@ export default {
 
             currentResView: 'headers',
 
-            showSyntaxTip: false
+            showSyntaxTip: false,
+
+            editing: false
         }
     },
 
     // todo: 是否 watch sessionList
-    computed: mapGetters({
-        sessionList: 'allSession'
-    }),
+    computed: {
+        editValue () {
+            return this.resData.textview
+        },
+
+        ...mapGetters({
+            sessionList: 'allSession'
+        })
+    },
+
+    watch: {
+        'resData.textview' (val) {
+            this.showSyntaxTip = !!val
+
+            !val && this.clearSyntax()
+        }
+    },
 
     components: {
         InspectorTable
@@ -230,13 +257,39 @@ export default {
 
         // todo: what other should not has textview ??
         getResTextview (session) {
-            this.$set(this.resData, 'textview', /^image\//i.test(session.contentType) ? '' : session.resBody)
+            let rawText = session.resBody
+
+            if (!rawText || /^image\//i.test(session.contentType)) {
+                this.$set(this.resData, 'textview', '')
+
+                return
+            }
+
+            let type = util.getContentType(session.contentType)
+
+            let syntaxview = ''
+
+            switch (type) {
+                case 'javascript':
+                    syntaxview = Beautify(rawText)
+                    break
+
+                case 'css':
+                    syntaxview = Beautify.css(rawText)
+                    break
+
+                case 'html':
+                    syntaxview = Beautify.html(rawText)
+                    break
+
+                default:
+                    syntaxview = rawText
+            }
+
+            this.$set(this.resData, 'textview', syntaxview)
         },
 
-        getResSyntaxview (session) {
-            this.showSyntaxTip = !!session.resBody
-
-            !this.showSyntaxTip && this.clearSyntax()
+        getResSyntaxview () {
         },
 
         clearSyntax () {
@@ -246,13 +299,11 @@ export default {
         doSyntax () {
             this.showSyntaxTip = false
 
-            let session = this.session
-
-            let rawText = session.resBody
+            let rawText = this.resData.textview
 
             let syntaxview
 
-            let type = util.getContentType(session.contentType)
+            let type = util.getContentType(this.resData.headers['content-type'])
 
             type = !rawText ? '' : type
 
@@ -379,6 +430,28 @@ export default {
                     func && util.type(func) === 'function' && func(session)
                 })
             })
+        },
+
+        saveResponse () {
+            let textarea = this.$el.querySelector('[data-role=res-inspector-textview-textarea]')
+
+            this.resData.textview = textarea.value
+
+            this.editing = false
+        },
+
+        cancelResponse () {
+            this.editing = false
+        },
+
+        editResponse () {
+            this.editing = true
+
+            let textarea = this.$el.querySelector('[data-role=res-inspector-textview-textarea]')
+
+            textarea.setSelectionRange(0, 0)
+
+            textarea.focus()
         }
     },
 

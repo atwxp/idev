@@ -38,9 +38,20 @@
             border-top: 1px solid #ccc;
         }
 
+        .inspector-content {
+            overflow-y: initial;
+
+            > div,
+            > ul {
+                height: 100%;
+            }
+        }
+
+
         .res-inspector-image {
             width: 90%;
-            margin: 15px auto;
+            padding: 15px;
+            overflow-y: auto;
 
             img {
                 display: block;
@@ -48,17 +59,63 @@
             }
         }
 
+        .res-inspector-textview {
+            position: relative;
+            height: 100%;
+
+            .res-inspector-textview-editor {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                .flex();
+
+                > span {
+                    display: block;
+                    line-height: 18px;
+                    background-color: #dadada;
+                    cursor: pointer;
+                    margin-left: 10px;
+
+                    > i {
+                        font-style: normal;
+                        padding: 0 6px;
+                    }
+
+                    &:hover {
+                        color: #458df1;
+                    }
+                }
+            }
+
+            > textarea {
+                height: 100%;
+                width: 100%;
+                border: none;
+                background: #ecf6fb;
+
+                &.focus {
+                    background: #fff;
+                }
+            }
+        }
+
         .res-inspector-syntaxview {
-            // position: relative;
+            position: relative;
 
             .callback-name {
                 color: #a00;
             }
 
+            > div {
+                height: 100%;
+                overflow-y: auto;
+            }
+
             .res-inspector-syntaxview-tip {
-                position: -webkit-sticky;
-                position: sticky;
-                display: block;
+                // position: -webkit-sticky;
+                // position: sticky;
+                // display: block;
+                position: absolute;
                 left: 0;
                 top: 0;
                 right: 0;

@@ -111,8 +111,6 @@ export default {
             },
 
             set (newVal) {
-                console.log('haha')
-
                 this.updateUiConfig({
                     ruleList: newVal
                 })
