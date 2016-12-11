@@ -30,6 +30,10 @@
                 <textarea :class="editing ? 'focus' : ''" data-role="res-inspector-textview-textarea" v-model="editValue" :readOnly="!editing"></textarea>
 
                 <div class="res-inspector-textview-editor">
+                    <span v-show="session.resHeader&&session.resHeader.idevRes" @click="recoverResponse">
+                        <i>Recover</i>
+                    </span>
+
                     <span v-show="this.editing" @click="saveResponse">
                         <i>Save</i>
                     </span>
@@ -90,6 +94,7 @@ export default {
                     isActive: false
                 }
             ],
+
             resNav: [
                 {
                     view: 'headers',
@@ -184,11 +189,11 @@ export default {
         },
 
         getReqCookies (session) {
-            let c = {};
+            let c = {}
 
-            let rdecode = /(%[0-9A-Z]{2})+/g;
+            let rdecode = /(%[0-9A-Z]{2})+/g
 
-            let cookie = session['reqHeader']['cookie'];
+            let cookie = session['reqHeader'] && session['reqHeader']['cookie'];
 
             cookie && cookie.split(/;\s*/).forEach((v) => {
                 let parts = v.split('=')
@@ -288,8 +293,7 @@ export default {
             this.$set(this.resData, 'textview', syntaxview)
         },
 
-        getResSyntaxview () {
-        },
+        getResSyntaxview () {},
 
         clearSyntax () {
             this.$el.querySelector('[data-role=res-inspector-syntaxview]').innerHTML = ''
@@ -369,7 +373,7 @@ export default {
                         + Prism.highlight(rawText, Prism.languages.js)
                         + '</code></pre>'
 
-                    break;
+                    break
 
                 case 'css':
                     syntaxview = ''
@@ -431,12 +435,30 @@ export default {
             })
         },
 
+        // redirect modify response
+        recoverResponse () {
+            window.bus.$emit('modifyResponse', {
+                modified: false,
+                fullUrl: this.session.host + this.session.path
+            })
+        },
+
         saveResponse () {
             let textarea = this.$el.querySelector('[data-role=res-inspector-textview-textarea]')
 
             this.resData.textview = textarea.value
 
             this.editing = false
+
+            window.bus.$emit('modifyResponse', {
+                modified: true,
+                fullUrl: this.session.host + this.session.path,
+                content: textarea.value,
+                header: {
+                    'content-type': this.session.contentType,
+                    idevRes: true
+                }
+            })
         },
 
         cancelResponse () {
@@ -458,7 +480,7 @@ export default {
         window.bus.$on('detailSession', (idx) => {
             this.session = this.sessionList[idx - 1]
 
-            this.getInfo(this.session)
+            this.getInfo(this.session || {})
         })
     }
 }

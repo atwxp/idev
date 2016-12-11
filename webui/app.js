@@ -100,6 +100,25 @@ app.run = function () {
             })
         })
 
+        client.on('modifyResponse', (option) => {
+            config.modifiedResponse = config.modifiedResponse || []
+
+            if (!((config.modifiedResponse).some((mr, i) => {
+
+                if (mr.modified) {
+                    config.modifiedResponse.splice(i, 1)
+                    return true
+                }
+
+                if (mr.fullUrl === option.fullUrl) {
+                    mr.content = option.content
+                    return true
+                }
+            }))) {
+                config.modifiedResponse.push(option)
+            }
+        })
+
         // webui close
         client.on('disconnect', () => {
             console.log('client disconnect, ooops!');

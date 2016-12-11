@@ -7,8 +7,11 @@ const state = {
 
 const mutations = {
     [types.ADD_SESSION] (state, newSession) {
+        Object.keys(newSession).forEach((k) => {
+            state.sessions[k] = Object.assign({}, state.sessions[k] || {}, newSession[k])
+        });
 
-        state.sessions = Object.assign({}, state.sessions, newSession)
+        state.sessions = Object.assign({}, state.sessions)
     }
 }
 

@@ -7,7 +7,7 @@ import config from '../../../lib/config'
 
 let fileStats
 
-let getFilePath = function (req, res, next) {
+export const getFilePath = (req, res, next) => {
     let uploadPath = path.join(config.dataDir, 'upload')
 
     fse.ensureDirSync(uploadPath)
@@ -76,16 +76,10 @@ let getFilePath = function (req, res, next) {
     form.parse(req)
 }
 
-let getUiConfig = function (req, res, next) {
+export const getUiConfig = (req, res, next) => {
     let uiConfigFilePath = path.join(config.dataDir, 'config.json')
 
     fse.ensureFileSync(uiConfigFilePath)
 
     res.sendFile(uiConfigFilePath)
-}
-
-export default {
-    getFilePath,
-
-    getUiConfig
 }

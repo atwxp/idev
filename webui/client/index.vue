@@ -128,6 +128,10 @@ export default {
         window.bus.$on('openHttps', (val) => {
             this.httpsModal = val
         })
+
+        window.bus.$on('modifyResponse', (option) => {
+            this.socket.emit('modifyResponse', option)
+        })
     }
 };
 </script>

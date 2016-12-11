@@ -15,11 +15,10 @@
 </template>
 
 <script>
-import inspector from 'components/inspector';
-import responder from 'components/responder';
-import composer from 'components/composer';
-import wizard from 'components/wizard';
-import log from 'components/log';
+import inspector from 'components/inspector'
+import responder from 'components/responder'
+import composer from 'components/composer'
+import wizard from 'components/wizard'
 
 export default {
     data () {
@@ -44,11 +43,6 @@ export default {
                     view: 'wizard',
                     text: 'text-wizard',
                     isActive: false
-                },
-                {
-                    view: 'log',
-                    text: 'log',
-                    isActive: false
                 }
             ],
 
@@ -71,8 +65,7 @@ export default {
         inspector,
         responder,
         composer,
-        wizard,
-        log
+        wizard
     }
 };
 </script>
