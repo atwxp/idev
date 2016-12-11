@@ -69,13 +69,7 @@ export default {
             },
 
             set (newVal) {
-                this.updateUiConfig({
-                    interceptHttps: newVal
-                })
-
-                window.bus.$emit('updateConfig', {
-                    interceptHttps: newVal
-                })
+                this.updateUiConfig(['interceptHttps', newVal])
             }
         },
 
@@ -94,11 +88,18 @@ export default {
     methods: {
         ...mapActions([
             'addSession',
+
             'updateUiConfig'
         ])
     },
 
     created () {
+        this.$watch('uiconfig', (newVal) => {
+            this.socket.emit('updateConfig', newVal)
+        }, {
+            deep: true
+        })
+
         this.$http.get('/api/getUiConfig').then((res) => {
             this.updateUiConfig(res && res.body || {})
         })
@@ -126,10 +127,6 @@ export default {
         // show https qrcode
         window.bus.$on('openHttps', (val) => {
             this.httpsModal = val
-        })
-
-        window.bus.$on('updateConfig', (val) => {
-            this.socket.emit('updateConfig', val)
         })
     }
 };

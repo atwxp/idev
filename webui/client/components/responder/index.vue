@@ -44,7 +44,8 @@
                 v-on:checkedRule="saveRule"
                 v-on:activeRule="activeRule"
                 v-on:deleteRule="deleteRule"
-            ></rule-item>
+                :active-id="activeId">
+            </rule-item>
         </ul>
     </div>
 </div>
@@ -84,7 +85,9 @@ export default {
 
             showSelect: false,
 
-            curRule: {}
+            curRule: {},
+
+            activeId: ''
         }
     },
 
@@ -95,30 +98,12 @@ export default {
             },
 
             set (newVal) {
-                this.updateUiConfig({
-                    enableRule: newVal
-                })
-
-                window.bus.$emit('updateConfig', {
-                    enableRule: newVal
-                })
+                this.updateUiConfig(['enableRule', newVal])
             }
         },
 
-        ruleList: {
-            get () {
-                return this.uiconfig.ruleList
-            },
-
-            set (newVal) {
-                this.updateUiConfig({
-                    ruleList: newVal
-                })
-
-                window.bus.$emit('updateConfig', {
-                    ruleList: newVal
-                })
-            }
+        ruleList () {
+            return this.uiconfig.ruleList
         },
 
         ...mapGetters(['uiconfig'])
@@ -126,7 +111,11 @@ export default {
 
     methods: {
         ...mapActions([
-            'updateUiConfig'
+            'updateUiConfig',
+
+            'updateRulelist',
+
+            'deleteRulelist'
         ]),
 
         importRule () {
@@ -138,34 +127,24 @@ export default {
             rule = rule || this.curRule
 
             if (
-                !rule.pattern || !rule.pattern.trim()
-                || !rule.respond || !rule.respond.trim()
+                (!rule.pattern || !rule.pattern.trim())
+                && (!rule.respond || !rule.respond.trim())
             ) {
                 return
             }
 
-            let newRule = {}
-
-            if (rule.id) {
-                newRule[rule.id] = Object.assign(this.ruleList[rule.id], rule)
-            }
-
-            else {
+            if (!rule.id) {
                 rule = util.extend({
                     id: util.gid(),
-                    active: false,
                     checked: false,
-                    showDel: false
                 }, rule)
-
-                newRule[rule.id] = rule
             }
 
-            this.ruleList = Object.assign({}, this.ruleList, newRule)
+            this.updateRulelist([rule.id, rule])
 
             !notClear && (this.curRule = {})
 
-            return newRule[rule.id || newRule.id]
+            return rule
         },
 
         activeRule (rule) {
@@ -175,16 +154,11 @@ export default {
                 respond: rule.respond
             }
 
-            Object.keys(this.ruleList).forEach((k) => {
-                this.ruleList[k].active = this.ruleList[k].id == rule.id
-            })
+            this.activeId = rule.id
         },
 
         deleteRule (rule) {
-
-            this.$delete(this.ruleList, rule.id)
-
-            this.ruleList = Object.assign({}, this.ruleList)
+            this.deleteRulelist(rule.id)
 
             if (this.curRule.id === rule.id) {
                 this.curRule = {}

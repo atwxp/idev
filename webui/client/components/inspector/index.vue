@@ -129,7 +129,6 @@ export default {
         }
     },
 
-    // todo: 是否 watch sessionList
     computed: {
         editValue () {
             return this.resData.textview
@@ -367,7 +366,7 @@ export default {
                 case 'javascript':
                     syntaxview = ''
                         + '<pre><code class="language-javascript">'
-                        + Prism.highlight(Beautify(rawText), Prism.languages.js)
+                        + Prism.highlight(rawText, Prism.languages.js)
                         + '</code></pre>'
 
                     break;
@@ -375,7 +374,7 @@ export default {
                 case 'css':
                     syntaxview = ''
                         + '<pre><code class="language-css">'
-                        + Prism.highlight(Beautify.css(rawText), Prism.languages.css)
+                        + Prism.highlight(rawText, Prism.languages.css)
                         + '</code></pre>'
 
                     break
@@ -383,7 +382,7 @@ export default {
                 case 'html':
                     syntaxview = ''
                         + '<pre><code class="language-html">'
-                        + Prism.highlight(Beautify.html(rawText), Prism.languages.html)
+                        + Prism.highlight(rawText, Prism.languages.html)
                         + '</code></pre>'
 
                     break

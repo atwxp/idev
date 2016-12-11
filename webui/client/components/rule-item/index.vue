@@ -1,18 +1,25 @@
 <template>
-    <li :class="['rule-item', {'rule-active': rule.active}]" v-on:mouseenter="rule.showDel=true" v-on:mouseleave="rule.showDel=false">
-        <input type="checkbox" name="rule" v-model="rule.checked" @change="checkedRule"/>
+    <li :class="['rule-item', {'rule-active': rule.id==activeId}]" @mouseenter="showDel=true" @mouseleave="showDel=false">
+
+        <input type="checkbox" name="rule" v-model="rule.checked" @change="checkedRule" />
 
         <label @click="activeRule">
             <span>{{rule.pattern}}</span>|<span>{{rule.respond}}</span>
         </label>
 
-        <i class="rule-delete" v-show="rule.showDel" @click="deleteRule"></i>
+        <i class="rule-delete" v-show="showDel" @click="deleteRule"></i>
     </li>
 </template>
 
 <script>
 export default {
-    props: ['rule'],
+    data () {
+        return {
+            showDel: false
+        }
+    },
+
+    props: ['rule', 'activeId'],
 
     methods: {
         checkedRule () {
