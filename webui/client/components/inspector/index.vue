@@ -12,9 +12,7 @@
 
             <inspector-table type="req-inspector-webform" v-show="currentReqView=='webform'" :info="reqData.webform"></inspector-table>
 
-            <div class="req-inspector-textview" v-show="currentReqView=='textview'">
-                {{reqData.textview}}
-            </div>
+            <inspector-table type="req-inspector-textview" v-show="currentReqView=='textview'" :info="reqData.textview"></inspector-table>
         </div>
     </div>
 
@@ -211,7 +209,19 @@ export default {
         },
 
         getReqTextview (session) {
-            this.$set(this.reqData, 'textview', session.reqBody)
+            let reqBody = session.reqBody || ''
+
+            let o = {}
+
+            reqBody.split('&').forEach((v) => {
+                v = (v || '').split('=')
+
+                if (v.length) {
+                    o[v[0]] = decodeURIComponent(v[1])
+                }
+            })
+
+            this.$set(this.reqData, 'textview', o)
         },
 
         // res
