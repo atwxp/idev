@@ -63,11 +63,6 @@ export default {
         return {
             options: [
                 {
-                    value: 'script with response',
-                    label: 'script'
-                },
-
-                {
                     value: 'Find a file...',
                     label: 'file'
                 },
@@ -133,11 +128,10 @@ export default {
                 return
             }
 
-            if (!rule.id) {
-                rule = util.extend({
-                    id: util.gid(),
-                    checked: false,
-                }, rule)
+            rule = {
+                id: util.gid(),
+                checked: false,
+                ...rule
             }
 
             this.updateRulelist([rule.id, rule])
@@ -148,11 +142,7 @@ export default {
         },
 
         activeRule (rule) {
-            this.curRule = {
-                id: rule.id,
-                pattern: rule.pattern,
-                respond: rule.respond
-            }
+            this.curRule = rule
 
             this.activeId = rule.id
         },
