@@ -105,7 +105,7 @@ app.run = function () {
 
             if (!((config.modifiedResponse).some((mr, i) => {
 
-                if (mr.modified) {
+                if (!mr.modified) {
                     config.modifiedResponse.splice(i, 1)
                     return true
                 }

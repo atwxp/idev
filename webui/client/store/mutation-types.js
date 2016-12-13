@@ -1,7 +1,13 @@
 export const ADD_SESSION = 'ADD_SESSION'
 
-export const UPDATE_UICONFIG = 'UPDATE_UICONFIG'
+export const SET_CONFIG = 'SET_CONFIG'
 
-export const UPDATE_RULELIST = 'UPDATE_RULELIST'
+export const TOGGLE_ENABLE_RULE = 'TOGGLE_ENABLE_RULE'
 
-export const DELETE_RULELIST = 'DELETE_RULELIST'
+export const TOGGLE_ENABLE_HTTPS = 'TOGGLE_ENABLE_HTTPS'
+
+export const ADD_RULE = 'ADD_RULE'
+
+export const UPDATE_RULE = 'UPDATE_RULE'
+
+export const DELETE_RULE = 'DELETE_RULE'

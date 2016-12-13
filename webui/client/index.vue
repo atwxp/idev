@@ -69,7 +69,7 @@ export default {
             },
 
             set (newVal) {
-                this.updateUiConfig(['interceptHttps', newVal])
+                this.toggleEnableHttps(newVal)
             }
         },
 
@@ -89,7 +89,9 @@ export default {
         ...mapActions([
             'addSession',
 
-            'updateUiConfig'
+            'setConfig',
+
+            'toggleEnableHttps'
         ])
     },
 
@@ -101,7 +103,7 @@ export default {
         })
 
         this.$http.get('/api/getUiConfig').then((res) => {
-            this.updateUiConfig(res && res.body || {})
+            this.setConfig(res && res.body || {})
         })
 
         // http://ip:8889/cgi/rootCA

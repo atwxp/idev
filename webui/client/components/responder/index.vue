@@ -7,9 +7,13 @@
             <label for="enable-rule">Enable Rules</label>
         </span>
 
-        <button class="form-btn" @click="addRule">Add Rule</button>
+        <button class="form-btn" @click="addRules">Add Rule</button>
 
-        <button class="form-btn" @click="importRule">Import</button>
+        <span class="form-btn import-btn">
+            <input type="file" @change="importRule">Import</button>
+        </span>
+
+        <button class="form-btn" @click="exportRule">Export</button>
     </div>
 
     <div class="responder-editor">
@@ -43,7 +47,7 @@
             <rule-item v-for="rule in ruleList" :rule="rule"
                 v-on:checkedRule="saveRule"
                 v-on:activeRule="activeRule"
-                v-on:deleteRule="deleteRule"
+                v-on:deleteRule="deleteRules"
                 :active-id="activeId">
             </rule-item>
         </ul>
@@ -52,7 +56,6 @@
 </template>
 
 <script>
-import util from 'util'
 import RuleItem from 'components/rule-item'
 
 import { mapActions } from 'vuex'
@@ -93,7 +96,7 @@ export default {
             },
 
             set (newVal) {
-                this.updateUiConfig(['enableRule', newVal])
+                this.toggleEnableRule(newVal)
             }
         },
 
@@ -106,15 +109,57 @@ export default {
 
     methods: {
         ...mapActions([
-            'updateUiConfig',
+            'toggleEnableRule',
 
-            'updateRulelist',
+            'addRule',
 
-            'deleteRulelist'
+            'updateRule',
+
+            'deleteRule'
         ]),
 
-        importRule () {
+        importRule (e) {
+            let files = e.target.files
 
+            let file = files && files[0]
+
+            let type = file && file.type
+
+            if (!/json/i.test(type)) {
+                alert('Not Valid JSON File!')
+                return
+            }
+
+            let reader = new FileReader()
+
+            reader.onload = (e) => {
+                let rules = e.target.result
+
+                try {
+                    rules = JSON.parse(rules)
+                }
+                catch (e) {
+                    rules = {}
+                }
+
+                this.addRule(rules)
+
+                alert('导入成功')
+            };
+
+            reader.onerror = function () {}
+
+            reader.readAsText(file)
+        },
+
+        exportRule () {
+            let a = document.createElement('a')
+
+            a.download = 'rule-config.json'
+
+            a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.ruleList || [], null, '\t'))
+
+            a.click()
         },
 
         // todo: repeated rule should be filter or do nothing??
@@ -128,13 +173,17 @@ export default {
                 return
             }
 
-            rule = {
-                id: util.gid(),
-                checked: false,
-                ...rule
+            if (rule.id) {
+                this.updateRule(rule)
             }
-
-            this.updateRulelist([rule.id, rule])
+            else {
+                rule = {
+                    id: +new Date(),
+                    checked: false,
+                    ...rule
+                }
+                this.addRule(rule)
+            }
 
             !notClear && (this.curRule = {})
 
@@ -142,23 +191,24 @@ export default {
         },
 
         activeRule (rule) {
-            this.curRule = rule
+            this.curRule = Object.assign({}, rule)
 
             this.activeId = rule.id
         },
 
-        deleteRule (rule) {
-            this.deleteRulelist(rule.id)
+        deleteRules (rule) {
+            this.deleteRule(rule.id)
 
             if (this.curRule.id === rule.id) {
                 this.curRule = {}
             }
         },
 
-        addRule () {
+        addRules () {
             let r = {
                 pattern: 'http://example.com',
-                respond: ''
+                respond: '',
+                checked: true
             }
 
             this.activeRule(this.saveRule(r))
