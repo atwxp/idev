@@ -67,7 +67,7 @@ function capitalize(str, lower) {
  * transform camelCase
  *
  * util.camelCase(v), 'auto-response' => 'AutoResponse'
- * util.camelCase(v, '-', true), 'content-type' => 'contentType'
+ * util.camelCase(v, '-', '', true), 'content-type' => 'contentType'
  * util.camelCase(v, '-', '-', true), 'content-type' => 'content-Type'
  * util.camelCase(v, '-', '-', false, true), 'Auto-Response' => 'auto-response'
  */

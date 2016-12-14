@@ -1,46 +1,41 @@
 import * as types from 'store/mutation-types'
 
-import util from '../../util'
-
-// initial state
 const state = {
-    sessionList: {}
+    sessionObj: {}
 }
 
 const getters = {
-    allSession: state => {
-        let sessionList = state.sessionList
-
-        return Object.keys(sessionList).map((idx) => {
-            let s = sessionList[idx]
-
-            s.cls = [
-                util.getContentType(s.contentType) || '',
-                util.getStatusType(s.status) || ''
-            ].join(' ')
-
-            return s
+    sessionList: state => {
+        return Object.keys(state.sessionObj).map((idx) => {
+            return state.sessionObj[idx]
         })
     }
 }
 
 const mutations = {
     [types.ADD_SESSION] (state, newSession = {}) {
-
         Object.keys(newSession).forEach((k) => {
-            if (state.sessionList[k]) {
-                state.sessionList[k] = {...state.sessionList[k], ...newSession[k]}
+            if (state.sessionObj[k]) {
+                state.sessionObj[k] = {...state.sessionObj[k], ...newSession[k]}
                 delete newSession[k]
             }
         })
 
-        state.sessionList = {...state.sessionList, ...newSession}
+        state.sessionObj = {...state.sessionObj, ...newSession}
+    },
+
+    [types.CLEAR_SESSION] (state) {
+        state.sessionObj = {}
     }
 }
 
 const actions = {
     addSession ({commit}, newSession) {
         commit(types.ADD_SESSION, newSession)
+    },
+
+    clearSession ({commit}) {
+        commit(types.CLEAR_SESSION)
     }
 }
 

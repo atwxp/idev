@@ -102,13 +102,13 @@ app.run = function () {
             config.modifiedResponse = config.modifiedResponse || []
 
             if (!((config.modifiedResponse).some((mr, i) => {
-
-                if (!mr.modified) {
-                    config.modifiedResponse.splice(i, 1)
-                    return true
-                }
-
                 if (mr.fullUrl === option.fullUrl) {
+
+                    if (!option.modified) {
+                        config.modifiedResponse.splice(i, 1)
+                        return true
+                    }
+
                     mr.content = option.content
                     return true
                 }

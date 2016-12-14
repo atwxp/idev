@@ -6,8 +6,8 @@
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="req in matchUrl(sessionList)" @click="getDetail(req.id)" :class="[req.cls, {selected: selected == req.id}]">
-                <span class="order">{{req.id}}</span>
+            <li v-for="(req, index) in matchUrl(sessionList)" @click="getDetail(index)" :class="[req.cls, {selected: selected == index}]">
+                <span class="order">{{index + 1}}</span>
 
                 <span class="status">{{req.status}}</span>
 
@@ -33,8 +33,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
-import { mapGetters } from 'vuex'
+import util from 'util'
 
 export default {
     data () {
@@ -47,16 +48,25 @@ export default {
         }
     },
 
-    computed: mapGetters({
-        sessionList: 'allSession'
+    computed: mapState({
+        sessionList: (state, getters) => {
+            return getters.sessionList.map((v) => {
+                v.cls = [
+                    util.getContentType(v.contentType) || '',
+                    util.getStatusType(v.status) || ''
+                ].join(' ')
+
+                return v
+            })
+        }
     }),
 
     methods: {
         matchUrl (sessions) {
-            let v = this.filterText.trim();
+            let v = this.filterText.trim()
 
             if (!v) {
-                return sessions;
+                return sessions
             }
 
             // todo: pattern match?

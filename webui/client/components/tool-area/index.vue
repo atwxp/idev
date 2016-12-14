@@ -9,6 +9,8 @@
 <script>
 import util from 'util'
 
+import { mapActions } from 'vuex'
+
 export default {
     data () {
         return {
@@ -17,12 +19,19 @@ export default {
     },
 
     methods: {
+        ...mapActions([
+            'clearSession'
+        ]),
         dealClick (m) {
 
             switch (m) {
                 case 'online':
                 case 'https':
                     window.bus.$emit('open' + util.capitalize(m), true)
+                    break
+
+                case 'clear':
+                    this.clearSession()
                     break
 
                 default:

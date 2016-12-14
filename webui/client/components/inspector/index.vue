@@ -2,33 +2,38 @@
 <div class="inspector">
     <div class="req-inspector">
         <ul class="inspector-bar">
-            <li v-for="(n, index) in reqNav" @click="toggleGroup('req', index)" v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
+            <li v-for="n in reqNav" @click="toggleGroup('req', n)"
+                v-bind:class="{active: activeReqId == n.id}"
+            >
+                {{n.view | camelCase}}
+            </li>
         </ul>
 
-        <div class="inspector-content">
-            <inspector-table type="req-inspector-headers" v-show="currentReqView=='headers'" :info="reqData.headers"></inspector-table>
-
-            <inspector-table type="req-inspector-cookies" v-show="currentReqView=='cookies'" :info="reqData.cookies"></inspector-table>
-
-            <inspector-table type="req-inspector-webform" v-show="currentReqView=='webform'" :info="reqData.webform"></inspector-table>
-
-            <inspector-table type="req-inspector-textview" v-show="currentReqView=='textview'" :info="reqData.textview"></inspector-table>
+        <div class="inspector-content req-inspector-content">
+            <inspector-table v-for="n in reqNav" v-show="activeReqId == n.id" :type="n.view"
+                :info="reqData[n.view]"
+            >
+            </inspector-table>
         </div>
     </div>
 
     <div class="res-inspector">
         <ul class="inspector-bar">
-            <li v-for="(n, index) in resNav" @click="toggleGroup('res', index)"  v-bind:class="{active: n.isActive}">{{n.text | camelCase}}</li>
+            <li v-for="n in resNav" @click="toggleGroup('res', n)"
+                v-bind:class="{active: activeResId == n.id}"
+            >
+                {{n.view | camelCase}}
+            </li>
         </ul>
 
         <div class="inspector-content">
-            <inspector-table type="res-inspector-headers" v-show="currentResView=='headers'" :info="resData.headers"></inspector-table>
+            <inspector-table type="res-inspector-headers" v-show="activeResId==0" :info="resData.headers"></inspector-table>
 
-            <div class="res-inspector-textview" v-show="currentResView=='textview'">
-                <textarea :class="editing ? 'focus' : ''" data-role="res-inspector-textview-textarea" v-model="editValue" :readOnly="!editing"></textarea>
+            <div class="res-inspector-textview" v-show="activeResId==1">
+                <textarea :class="editing ? 'focus' : ''" ref="textarea" v-model="editValue" :readOnly="!editing"></textarea>
 
                 <div class="res-inspector-textview-editor">
-                    <span v-show="session.resHeader&&session.resHeader.idevRes" @click="recoverResponse">
+                    <span v-show="showRecover" @click="recoverResponse">
                         <i>Recover</i>
                     </span>
 
@@ -43,13 +48,16 @@
                 </div>
             </div>
 
-            <div class="res-inspector-syntaxview" v-show="currentResView=='syntaxview'">
-                <span class="res-inspector-syntaxview-tip" v-show="showSyntaxTip" @click="doSyntax">Response body can be syntax highlighting.Click to syntax on.</span>
-                <div data-role="res-inspector-syntaxview"></div>
+            <div class="res-inspector-syntaxview" v-show="activeResId==2">
+                <span class="res-inspector-syntaxview-tip" v-show="showSyntaxTip" @click="doSyntax">
+                    Response body can be syntax highlighting.Click to syntax on.
+                </span>
+
+                <div v-html="resData.syntaxview"></div>
             </div>
 
-            <div class="res-inspector-image" v-show="currentResView=='imageview'">
-                <img :src="resData.imageview" v-show="resData&&resData.imageview">
+            <div class="res-inspector-image" v-show="activeResId==3">
+                <img :src="resData.imageview" v-show="resData && resData.imageview">
             </div>
         </div>
     </div>
@@ -73,46 +81,38 @@ export default {
             reqNav: [
                 {
                     view: 'headers',
-                    text: 'headers',
-                    isActive: true
+                    id: 0
                 },
                 {
                     view: 'cookies',
-                    text: 'cookies',
-                    isActive: false
+                    id: 1
                 },
                 {
-                    view: 'webform',
-                    text: 'web-forms',
-                    isActive: false
+                    view: 'web-forms',
+                    id: 2
                 },
                 {
-                    view: 'textview',
-                    text: 'text-view',
-                    isActive: false
+                    view: 'text-view',
+                    id: 3
                 }
             ],
 
             resNav: [
                 {
                     view: 'headers',
-                    text: 'headers',
-                    isActive: true
+                    id: 0
                 },
                 {
-                    view: 'textview',
-                    text: 'text-view',
-                    isActive: false
+                    view: 'text-view',
+                    id: 1
                 },
                 {
-                    view: 'syntaxview',
-                    text: 'syntax-view',
-                    isActive: false
+                    view: 'syntax-view',
+                    id: 2
                 },
                 {
-                    view: 'imageview',
-                    text: 'image-view',
-                    isActive: false
+                    view: 'image-view',
+                    id: 3
                 }
             ],
 
@@ -122,13 +122,15 @@ export default {
 
             session: {},
 
-            currentReqView: 'headers',
+            activeReqId: 0,
 
-            currentResView: 'headers',
+            activeResId: 0,
 
             showSyntaxTip: false,
 
-            editing: false
+            editing: false,
+
+            showRecover: false
         }
     },
 
@@ -137,9 +139,9 @@ export default {
             return this.resData.textview
         },
 
-        ...mapGetters({
-            sessionList: 'allSession'
-        })
+        ...mapGetters([
+            'sessionList'
+        ])
     },
 
     watch: {
@@ -155,12 +157,8 @@ export default {
     },
 
     methods: {
-        toggleGroup (type, index) {
-            this[type + 'Nav'].forEach((v, i) => {
-                v.isActive = i === index;
-            });
-
-            this['current' + util.camelCase(type + '-view')] = this[type + 'Nav'][index].view
+        toggleGroup (type, n) {
+            this[util.camelCase('active-' + type + '-id', '-', '', true)] = n.id
         },
 
         // req
@@ -204,16 +202,14 @@ export default {
             this.$set(this.reqData, 'cookies', c)
         },
 
-        getReqWebform (session) {
-            this.$set(this.reqData, 'webform', session.query)
+        getReqWebForms (session) {
+            this.$set(this.reqData, 'web-forms', session.query)
         },
 
-        getReqTextview (session) {
-            let reqBody = session.reqBody || ''
+        getReqTextView (session) {
+            let o = {};
 
-            let o = {}
-
-            reqBody.split('&').forEach((v) => {
+            (session.reqBody || '').split('&').forEach((v) => {
                 if (!v) {
                     return
                 }
@@ -223,7 +219,7 @@ export default {
                 o[v[0]] = decodeURIComponent(v[1] || '')
             })
 
-            this.$set(this.reqData, 'textview', o)
+            this.$set(this.reqData, 'text-view', o)
         },
 
         // res
@@ -269,10 +265,12 @@ export default {
             })
 
             this.$set(this.resData, 'headers', d)
+
+            this.showRecover = resHeader.idevRes
         },
 
         // todo: what other should not has textview ??
-        getResTextview (session) {
+        getResTextView (session) {
             let rawText = session.resBody
 
             if (!rawText || /^image\//i.test(session.contentType)) {
@@ -305,10 +303,10 @@ export default {
             this.$set(this.resData, 'textview', syntaxview)
         },
 
-        getResSyntaxview () {},
+        getResSyntaxView () {},
 
         clearSyntax () {
-            this.$el.querySelector('[data-role=res-inspector-syntaxview]').innerHTML = ''
+            this.$set(this.resData, 'syntaxview', '')
         },
 
         doSyntax () {
@@ -428,10 +426,10 @@ export default {
 
             this.clearSyntax()
 
-            syntaxview && this.$el.querySelector('[data-role=res-inspector-syntaxview]').appendChild(util.createNode(syntaxview))
+            syntaxview && this.$set(this.resData, 'syntaxview', syntaxview)
         },
 
-        getResImageview (session) {
+        getResImageView (session) {
             this.$set(this.resData, 'imageview', /^image\//i.test(session.contentType) ? session.url : '')
         },
 
@@ -449,6 +447,8 @@ export default {
 
         // redirect modify response
         recoverResponse () {
+            this.showRecover = false
+
             window.bus.$emit('modifyResponse', {
                 modified: false,
                 fullUrl: this.session.host + this.session.path
@@ -456,16 +456,19 @@ export default {
         },
 
         saveResponse () {
-            let textarea = this.$el.querySelector('[data-role=res-inspector-textview-textarea]')
+            let value = this.$refs.textarea.value
 
-            this.resData.textview = textarea.value
+            this.resData.textview = value
 
             this.editing = false
 
             window.bus.$emit('modifyResponse', {
                 modified: true,
+
                 fullUrl: this.session.host + this.session.path,
-                content: textarea.value,
+
+                content: value,
+
                 header: {
                     'content-type': this.session.contentType,
                     idevRes: true
@@ -480,7 +483,7 @@ export default {
         editResponse () {
             this.editing = true
 
-            let textarea = this.$el.querySelector('[data-role=res-inspector-textview-textarea]')
+            let textarea = this.$refs.textarea
 
             textarea.setSelectionRange(0, 0)
 
@@ -490,9 +493,9 @@ export default {
 
     created () {
         window.bus.$on('detailSession', (idx) => {
-            this.session = this.sessionList[idx - 1]
+            this.session = this.sessionList[idx] || {}
 
-            this.getInfo(this.session || {})
+            this.getInfo(this.session)
         })
     }
 }

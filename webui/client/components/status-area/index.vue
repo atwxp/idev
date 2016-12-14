@@ -2,13 +2,13 @@
 <div class="status-area">
     <div class="status-bar">
         <ul>
-            <li v-for="(t, index) in tab" @click="togglePanel(index)" v-bind:class="{active: t.isActive}">{{t.text | camelCase}}</li>
+            <li v-for="t in tab" @click="activeId = t.id" v-bind:class="{active: activeId == t.id}">{{t.text | camelCase}}</li>
         </ul>
     </div>
 
     <div class="status-content">
         <keep-alive>
-            <component :is="currentView"></component>
+            <component :is="tab[activeId].view"></component>
         </keep-alive>
     </div>
 </div>
@@ -25,39 +25,29 @@ export default {
         return {
             tab: [
                 {
+                    id: 0,
                     view: 'inspector',
-                    text: 'inspector',
-                    isActive: true
+                    text: 'inspector'
                 },
                 {
+                    id: 1,
                     view: 'responder',
                     text: 'auto-responder',
                     isActive: false
                 },
                 {
+                    id: 2,
                     view: 'composer',
-                    text: 'composer',
-                    isActive: false
+                    text: 'composer'
                 },
                 {
+                    id: 3,
                     view: 'wizard',
-                    text: 'text-wizard',
-                    isActive: false
+                    text: 'text-wizard'
                 }
             ],
 
-            currentView: 'inspector'
-        }
-    },
-
-    methods: {
-        togglePanel (index) {
-
-            this.tab.forEach((v, i) => {
-                v.isActive = i === index;
-            });
-
-            this.currentView = this.tab[index].view;
+            activeId: 0
         }
     },
 

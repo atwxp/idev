@@ -142,7 +142,7 @@ export default {
                     rules = {}
                 }
 
-                this.addRule(rules)
+                this.addRule(rules.ruleList)
 
                 alert('导入成功')
             };

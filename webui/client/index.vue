@@ -123,7 +123,6 @@ export default {
             })
         })
 
-
         // show online info
         window.bus.$on('openOnline', (val) => {
             this.onlineModal = val
