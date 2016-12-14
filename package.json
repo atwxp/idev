@@ -64,6 +64,7 @@
     "webpack-dev-server": "^1.16.1"
   },
   "dependencies": {
+    "babel-preset-stage-2": "^6.18.0",
     "body-parser": "^1.15.2",
     "commander": "^2.9.0",
     "express": "^4.14.0",

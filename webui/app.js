@@ -22,9 +22,7 @@ app.run = function () {
 
     fse.ensureFileSync(uiConfigFilePath)
 
-    let uiConfig = fse.readJsonSync(uiConfigFilePath, {throws: false})
-
-    uiConfig = uiConfig || {}
+    let uiConfig = fse.readJsonSync(uiConfigFilePath, {throws: false}) || {}
 
     Object.assign(config, uiConfig)
 

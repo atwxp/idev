@@ -7,10 +7,6 @@ import config from '../lib/config'
 export default function () {
     const port = config.webpackPort || 8080;
 
-    webpackConfig.plugins.push(new webpack.DefinePlugin({
-        UIPORT: JSON.stringify(config.uiport)
-    }))
-
     const compiler = webpack(webpackConfig)
 
     webpackConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:' + port + '/')

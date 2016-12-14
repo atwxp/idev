@@ -81,5 +81,11 @@ export const getUiConfig = (req, res, next) => {
 
     fse.ensureFileSync(uiConfigFilePath)
 
-    res.sendFile(uiConfigFilePath)
+    let uiConfig = fse.readJsonSync(uiConfigFilePath, {throws: false})
+
+    uiConfig = Object.assign(uiConfig || {}, {
+        uiport: config.uiport
+    })
+
+    res.send(uiConfig)
 }

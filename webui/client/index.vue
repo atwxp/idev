@@ -103,23 +103,26 @@ export default {
         })
 
         this.$http.get('/api/getUiConfig').then((res) => {
-            this.setConfig(res && res.body || {})
+            let data = res && res.body || {}
+
+            this.setConfig(data)
+
+            // http://ip:8889/cgi/rootCA
+            this.httpsCAData = 'http://' + location.hostname + ':' + data.uiport + '/cgi/rootCA'
+
+            const socket = this.socket = socketClient('http://' + location.hostname + ':' + data.uiport + '/')
+
+            // 监听到请求后更新到 webui 的 req-area, status-area
+            socket.on('reqArrival', (data) => {
+                data && this.addSession(data)
+            })
+
+            // 获取 IP 端口网络信息，通知到 tool-area 的 online
+            socket.on('join', (data) => {
+                this.network = data
+            })
         })
 
-        // http://ip:8889/cgi/rootCA
-        this.httpsCAData = 'http://' + location.hostname + ':' + UIPORT + '/cgi/rootCA'
-
-        const socket = this.socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
-
-        // 监听到请求后更新到 webui 的 req-area, status-area
-        socket.on('reqArrival', (data) => {
-            data && this.addSession(data)
-        })
-
-        // 获取 IP 端口网络信息，通知到 tool-area 的 online
-        socket.on('join', (data) => {
-            this.network = data
-        })
 
         // show online info
         window.bus.$on('openOnline', (val) => {
