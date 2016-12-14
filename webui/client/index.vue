@@ -107,7 +107,7 @@ export default {
         })
 
         // http://ip:8889/cgi/rootCA
-        this.httpsCAData = 'http://' + location.hostname + ':' + UIPORT + '/cgi/rootCA';
+        this.httpsCAData = 'http://' + location.hostname + ':' + UIPORT + '/cgi/rootCA'
 
         const socket = this.socket = socketClient('http://' + location.hostname + ':' + UIPORT + '/')
 

@@ -214,11 +214,13 @@ export default {
             let o = {}
 
             reqBody.split('&').forEach((v) => {
-                v = (v || '').split('=')
-
-                if (v.length) {
-                    o[v[0]] = decodeURIComponent(v[1])
+                if (!v) {
+                    return
                 }
+
+                v = v.split('=')
+
+                o[v[0]] = decodeURIComponent(v[1] || '')
             })
 
             this.$set(this.reqData, 'textview', o)
