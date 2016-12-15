@@ -279,6 +279,14 @@ function formatSize(size) {
     }
 }
 
+function decodeUri(str) {
+    return decodeURIComponent(str)
+}
+
+function encodeUri(str) {
+    return encodeURIComponent(str)
+}
+
 export default {
     gid,
     type,
@@ -300,5 +308,7 @@ export default {
     base64Decode,
     utf8Encode,
     utf8Decode,
+    decodeUri,
+    encodeUri,
     getZIndex
 }

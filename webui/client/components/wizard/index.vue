@@ -30,6 +30,14 @@
                 <input type="radio" value="base64-decode" name="codec" v-model="codec" id="base64-decode">
                 <label for="base64-decode">base64解码</label>
             </li>
+            <li>
+                <input type="radio" value="decode-uri" name="codec" v-model="codec" id="decode-uri">
+                <label for="decode-uri">decodeURI</label>
+            </li>
+            <li>
+                <input type="radio" value="encode-uri" name="codec" v-model="codec" id="encode-uri">
+                <label for="encode-uri">encodeURI</label>
+            </li>
         </ul>
 
         <div class="btns">
@@ -62,20 +70,29 @@ export default {
 
     methods: {
         convert () {
-            let val = this.rawText;
+            let val = this.rawText
 
             if (!val) {
-                return;
+                return
             }
 
-            let codec = util.capitalize(util.camelCase(this.codec), true);
+            let codec = util.capitalize(util.camelCase(this.codec), true)
 
-            this.resultText = util[codec](val);
+            try {
+                val = util[codec](val)
+            }
+
+            catch (e) {
+                val = ''
+            }
+
+            this.resultText = val
         },
 
         clear () {
-            this.rawText = '';
-            this.resultText = '';
+            this.rawText = ''
+
+            this.resultText = ''
         }
     }
 }
