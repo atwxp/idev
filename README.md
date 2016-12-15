@@ -40,7 +40,7 @@
 
 ## WebUI
 
-![](./image/ui.png)
+![](./ui.png)
 
 ## Todos
 
