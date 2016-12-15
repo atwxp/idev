@@ -1,19 +1,18 @@
 {
   "name": "idevt",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "A Web Debugger Proxy Like Fiddler",
   "bin": {
     "idev": "./bin/cli"
   },
   "main": "./lib/index.js",
   "scripts": {
-    "clean:dist": "rm -rf dist",
-    "babel": "babel lib -d dist && && babel webui/app.js -o webui/app.js",
+    "babel": "babel lib -d lib && babel webui -d webui --ignore client/**,output/**",
     "clean:webui": "rm -rf output webui/output",
     "build": "npm run clean:webui && webpack --config webui/webpack.config.babel.js --colors",
     "pub": "cross-env NODE_ENV=production npm run build",
-    "publish:patch": "npm test && npm run clean:dist && npm run clean:webui && npm run pub && npm run babel && npm version patch && npm publish",
-    "publish:minor": "npm test && npm run clean:dist && npm run clean:webui && npm run pub && npm run babel && npm version minor && npm publish",
+    "publish:patch": "npm run clean:webui && npm run pub && npm run babel && npm version patch && npm publish",
+    "publish:minor": "npm run clean:webui && npm run pub && npm run babel && npm version minor && npm publish",
     "lint": "fecs -v && fecs ./*.js --type=js --rule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -71,6 +70,7 @@
     "webpack-dev-server": "^1.16.1"
   },
   "dependencies": {
+    "babel-runtime": "^6.20.0",
     "body-parser": "^1.15.2",
     "commander": "^2.9.0",
     "express": "^4.14.0",
