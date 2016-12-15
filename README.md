@@ -1,8 +1,8 @@
 # idevt
 
-## Feature
+## Features
 
-- Capture request/resonse
+- Capture request/response
 
 - Filter request url
 
@@ -18,31 +18,31 @@
 
 - Textwizard
 
-## Usage
+## Usages
 
     npm i idevt -g
 
 ## Commands
 
-### start debug
-
+    // start debug
     idev start
+
     // or specify specific port
     idev start -p yourport
 
-### log help info
 
-    idev help
+    // log help info
+    idev -h
 
-### log version
 
+    // log version
     idev -V
 
 ## WebUI
 
 ![](./image/ui.png)
 
-## Todo
+## Todos
 
 - support weiner/jsconsole
 
