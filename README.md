@@ -1,19 +1,39 @@
 # idev
 
-## commands
+A Web Debugger Proxy Like Fiddler
 
-查看版本
+## Usage
 
-    idev -V
+    npm i idev -g
 
-帮助信息
+## Commands
 
-    idev help
-
-启动调试
+1、start debug
 
     idev start
 
-## refer
+    // Or
+
+    idev start -p yourport
+
+2、log help info
+
+    idev help
+
+3、log version
+
+    idev -V
+
+## UI
+
+![](./ui.png)
+
+## Todo
+
+- weiner/jsconsole
+
+- clear cache
+
+## Refer
 
 - [Mixu's Node book](http://book.mixu.net/node/ch10.html)
