@@ -11,8 +11,8 @@
     "clean:webui": "rm -rf output webui/output",
     "build": "npm run clean:webui && webpack --config webui/webpack.config.babel.js --colors",
     "pub": "cross-env NODE_ENV=production npm run build",
-    "publish:patch": "npm run clean:webui && npm run pub && npm run babel && npm version patch && npm publish",
-    "publish:minor": "npm run clean:webui && npm run pub && npm run babel && npm version minor && npm publish",
+    "publish:patch": "npm run clean:webui && npm run pub && npm run babel && git add . && git commit -m 'publish:patch' && npm version patch && npm publish",
+    "publish:minor": "npm run clean:webui && npm run pub && npm run babel && git add . && git commit -m 'publish:minor' && npm version minor && npm publish",
     "lint": "fecs -v && fecs ./*.js --type=js --rule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
