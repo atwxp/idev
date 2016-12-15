@@ -1,38 +1,56 @@
-# idev
+# idevt
 
-A Web Debugger Proxy Like Fiddler
+## Feature
+
+- Capture request/resonse
+
+- Filter request url
+
+- Syntax highlighting the response body
+
+- Image response preview
+
+- Support HTTP/HTTPS
+
+- Modify response directly
+
+- Custom autoResponder Rule(import/export rulelist)
+
+- Textwizard
 
 ## Usage
 
-    npm i idev -g
+    npm i idevt -g
 
 ## Commands
 
-1、start debug
+### start debug
 
     idev start
-
-    // Or
-
+    // or specify specific port
     idev start -p yourport
 
-2、log help info
+### log help info
 
     idev help
 
-3、log version
+### log version
 
     idev -V
 
-## UI
+## WebUI
 
-![](./ui.png)
+![](./image/ui.png)
 
 ## Todo
 
-- weiner/jsconsole
+- support weiner/jsconsole
 
-- clear cache
+- clear 304 cache
+
+- replay request
+
+- support composer
 
 ## Refer
 
