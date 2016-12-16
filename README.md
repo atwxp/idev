@@ -1,5 +1,7 @@
 # idevt
 
+A Web Debugger Proxy Like Fiddler.
+
 ## Features
 
 - Capture request/response
@@ -14,11 +16,11 @@
 
 - Modify response directly
 
-- Custom autoResponder Rule(import/export rulelist)
+- Custom autoresponder rule(import/export rulelist)
 
 - Textwizard
 
-## Usages
+## Install
 
     npm i idevt -g
 

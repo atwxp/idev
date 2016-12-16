@@ -1,7 +1,7 @@
 {
   "name": "idevt",
-  "version": "0.0.6",
-  "description": "A Web Debugger Proxy Like Fiddler",
+  "version": "0.0.1",
+  "description": "A Web Debugger Proxy Like Fiddler.",
   "bin": {
     "idev": "./bin/cli"
   },
@@ -10,9 +10,9 @@
     "babel": "babel lib -d lib && babel webui -d webui --ignore client/**,output/**",
     "clean:webui": "rm -rf output webui/output",
     "build": "npm run clean:webui && webpack --config webui/webpack.config.babel.js --colors",
-    "pub": "cross-env NODE_ENV=production npm run build",
-    "publish:patch": "npm run clean:webui && npm run pub && npm run babel && git add . && git commit -m 'publish:patch' && npm version patch && npm publish",
-    "publish:minor": "npm run clean:webui && npm run pub && npm run babel && git add . && git commit -m 'publish:minor' && npm version minor && npm publish",
+    "pub": "cross-env NODE_ENV=production npm run build && npm run babel",
+    "publish:patch": "npm run pub && git add . && npm version patch && npm publish",
+    "publish:minor": "npm run pub && git add . && npm version minor && npm publish",
     "lint": "fecs -v && fecs ./*.js --type=js --rule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
