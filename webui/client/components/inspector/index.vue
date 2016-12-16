@@ -120,8 +120,6 @@ export default {
 
             resData: {},
 
-            session: {},
-
             activeReqId: 0,
 
             activeResId: 0,
@@ -140,7 +138,7 @@ export default {
         },
 
         ...mapGetters([
-            'sessionList'
+            'activeSession'
         ])
     },
 
@@ -149,6 +147,10 @@ export default {
             this.showSyntaxTip = !!val
 
             !val && this.clearSyntax()
+        },
+
+        'activeSession' () {
+            this.getInfo()
         }
     },
 
@@ -178,7 +180,7 @@ export default {
 
                 'user-agent', 'referer'
             ].forEach((v) => {
-                d[v] = session['reqHeader'][v]
+                d[v] = session['reqHeader'] && session['reqHeader'][v]
             })
 
             this.$set(this.reqData, 'headers', d)
@@ -433,7 +435,15 @@ export default {
             this.$set(this.resData, 'imageview', /^image\//i.test(session.contentType) ? session.url : '')
         },
 
-        getInfo (session) {
+        getInfo () {
+            let session = this.activeSession
+
+            if (!session || !Object.keys(session).length) {
+                this.reqData = {}
+                this.resData = {}
+                return
+            }
+
             let me = this;
 
             ['req', 'res'].forEach((v) => {
@@ -489,14 +499,6 @@ export default {
 
             textarea.focus()
         }
-    },
-
-    created () {
-        window.bus.$on('detailSession', (idx) => {
-            this.session = this.sessionList[idx] || {}
-
-            this.getInfo(this.session)
-        })
     }
 }
 </script>

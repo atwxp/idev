@@ -2,6 +2,8 @@ export const ADD_SESSION = 'ADD_SESSION'
 
 export const CLEAR_SESSION = 'CLEAR_SESSION'
 
+export const SET_ACTIVE_SESSION = 'SET_ACTIVE_SESSION_ID'
+
 export const SET_CONFIG = 'SET_CONFIG'
 
 export const TOGGLE_ENABLE_RULE = 'TOGGLE_ENABLE_RULE'

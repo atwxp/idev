@@ -6,7 +6,7 @@
 
     <div class="req-content">
         <ul class="req-list">
-            <li v-for="(req, index) in matchUrl(sessionList)" @click="getDetail(index)" :class="[req.cls, {selected: selected == index}]">
+            <li v-for="(req, index) in matchUrl(sessionList)" @click="getDetail(req)" :class="[req.cls, {selected: selected == req.id}]">
                 <span class="order">{{index + 1}}</span>
 
                 <span class="status">{{req.status}}</span>
@@ -34,6 +34,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 import util from 'util'
 
@@ -41,8 +42,6 @@ export default {
     data () {
         return {
             nav: ['#', 'status', 'protocol', 'method', 'host', 'path', 'content-type', 'server-ip'],
-
-            selected: -1,
 
             filterText: ''
         }
@@ -58,10 +57,16 @@ export default {
 
                 return v
             })
-        }
+        },
+
+        selected: (state) => state.session.activeId
     }),
 
     methods: {
+        ...mapActions([
+            'setActiveSessionId'
+        ]),
+
         matchUrl (sessions) {
             let v = this.filterText.trim()
 
@@ -75,10 +80,8 @@ export default {
             })
         },
 
-        getDetail (idx) {
-            this.selected = idx
-
-            window.bus.$emit('detailSession', idx)
+        getDetail (req) {
+            this.setActiveSessionId(req.id)
         }
     }
 }

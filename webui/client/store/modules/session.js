@@ -1,7 +1,9 @@
 import * as types from 'store/mutation-types'
 
 const state = {
-    sessionObj: {}
+    sessionObj: {},
+
+    activeId: -1
 }
 
 const getters = {
@@ -9,6 +11,10 @@ const getters = {
         return Object.keys(state.sessionObj).map((idx) => {
             return state.sessionObj[idx]
         })
+    },
+
+    activeSession: state => {
+        return state.sessionObj[state.activeId]
     }
 }
 
@@ -24,14 +30,24 @@ const mutations = {
         state.sessionObj = {...state.sessionObj, ...newSession}
     },
 
+    [types.SET_ACTIVE_SESSION_ID] (state, id) {
+        state.activeId = id
+    },
+
     [types.CLEAR_SESSION] (state) {
         state.sessionObj = {}
+
+        state.activeId = -1
     }
 }
 
 const actions = {
     addSession ({commit}, newSession) {
         commit(types.ADD_SESSION, newSession)
+    },
+
+    setActiveSessionId ({commit}, id) {
+        commit(types.SET_ACTIVE_SESSION_ID, id)
     },
 
     clearSession ({commit}) {
