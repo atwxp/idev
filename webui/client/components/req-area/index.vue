@@ -76,7 +76,7 @@ export default {
 
             // todo: pattern match?
             return sessions.filter((s) => {
-                return s.url.indexOf(v) > -1
+                return s.url && s.url.indexOf(v) > -1
             })
         },
 

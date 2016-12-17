@@ -58,6 +58,9 @@ app.run = function () {
         res.sendFile(path.join(config.dataDir, 'certs', 'rootCA.crt'))
     });
 
+    app.use('/cgi/vorlon', (req, res) => {
+    })
+
     // We only want to run the workflow when in dev
     if (config.debug) {
         webpackDevConfig();

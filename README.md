@@ -14,6 +14,8 @@ A Web Debugger Proxy Like Fiddler.
 
 - Support HTTP/HTTPS
 
+- Support Vorlon
+
 - Modify response directly
 
 - Custom autoresponder rule(import/export rulelist)
@@ -45,8 +47,6 @@ A Web Debugger Proxy Like Fiddler.
 ![](./ui.png)
 
 ## Todos
-
-- support weiner/jsconsole
 
 - clear 304 cache
 

@@ -44,7 +44,7 @@ export default {
             if (keycode === 83 && e.ctrlKey) {
                 window.bus.$emit('codeChange', false)
 
-                // this.updateVorlon(this.tcode.trim().split('\n'))
+                this.updateVorlon(this.tcode.trim().split('\n'))
             }
         },
 
