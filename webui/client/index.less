@@ -59,6 +59,28 @@ body {
     min-width: 1020px;
 }
 
+.tool-area {
+    > ul {
+        .flex();
+    }
+
+    height: 30px;
+    line-height: 30px;
+
+    background: #13b5b1;
+    color: #fff;
+
+    li {
+        margin: 0 10px;
+        cursor: pointer;
+
+        &.active,
+        &:hover {
+            color: #ffeb3b;
+        }
+    }
+}
+
 // form ui
 .form-input {
     display: block;

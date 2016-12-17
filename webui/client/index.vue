@@ -1,10 +1,14 @@
 <template>
 <div class="app">
-    <tool-area></tool-area>
+    <div class="tool-area">
+        <ul>
+            <li v-for="(action, title) in tool" v-show="action.showing" @click="action.cb">{{title | camelCase}}</li>
+        </ul>
+    </div>
 
-    <req-area></req-area>
-
-    <status-area></status-area>
+    <keep-alive>
+        <component :is="activeView"></component>
+    </keep-alive>
 
     <modal :showing.sync="onlineModal" cls="online-modal" v-on:close="onlineModal=false">
         <h5>Hostname: {{network.hostname}}</h5>
@@ -32,13 +36,10 @@
 import Vue from 'vue'
 import socketClient from 'socket.io-client'
 
-import ToolArea from 'components/tool-area'
-import ReqArea from 'components/req-area'
-import StatusArea from 'components/status-area'
-
+import Session from 'components/session'
+import Vorlon from 'components/vorlon'
 import Alert from 'ui/alert'
 import Modal from 'ui/modal'
-
 import Qrcode from 'v-qrcode/src/index'
 
 import { mapActions } from 'vuex'
@@ -50,6 +51,38 @@ window.bus = new Vue()
 export default {
     data () {
         return {
+            tool: {
+                'session': {
+                    showing: false,
+                    cb: this.showSession
+                },
+
+                'clear': {
+                    showing: true,
+                    cb: this.clearSession
+                },
+
+                'replay': {
+                    showing: true,
+                    cb: this.doReplay
+                },
+
+                'https': {
+                    showing: true,
+                    cb: this.showHttpsModal
+                },
+
+                'vorlon': {
+                    showing: true,
+                    cb: this.showVorlon
+                },
+
+                'online': {
+                    showing: true,
+                    cb: this.showOnlineModal
+                }
+            },
+
             socket: null,
 
             network: {},
@@ -58,7 +91,9 @@ export default {
 
             httpsModal: false,
 
-            httpsCAData: ''
+            httpsCAData: '',
+
+            activeView: 'session'
         }
     },
 
@@ -77,17 +112,46 @@ export default {
     },
 
     components: {
-        ToolArea,
-        ReqArea,
-        StatusArea,
+        Session,
+        Vorlon,
         Alert,
         Modal,
         Qrcode
     },
 
     methods: {
+        doReplay () {
+
+        },
+
+        showHttpsModal () {
+            this.httpsModal = true
+        },
+
+        showOnlineModal () {
+            this.onlineModal = true
+        },
+
+        showSession () {
+            this.activeView = 'session'
+
+            this.tool['session'].showing = false
+
+            this.tool['clear'].showing = true
+        },
+
+        showVorlon () {
+            this.activeView = 'vorlon'
+
+            this.tool['session'].showing = true
+
+            this.tool['clear'].showing = false
+        },
+
         ...mapActions([
             'addSession',
+
+            'clearSession',
 
             'setConfig',
 
@@ -121,16 +185,6 @@ export default {
             socket.on('join', (data) => {
                 this.network = data
             })
-        })
-
-        // show online info
-        window.bus.$on('openOnline', (val) => {
-            this.onlineModal = val
-        })
-
-        // show https qrcode
-        window.bus.$on('openHttps', (val) => {
-            this.httpsModal = val
         })
 
         window.bus.$on('modifyResponse', (option) => {
