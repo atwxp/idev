@@ -36,8 +36,7 @@
 import Vue from 'vue'
 import socketClient from 'socket.io-client'
 
-import Session from 'components/session'
-import Vorlon from 'components/vorlon'
+import Network from 'components/session'
 import Alert from 'ui/alert'
 import Modal from 'ui/modal'
 import Qrcode from 'v-qrcode/src/index'
@@ -52,9 +51,9 @@ export default {
     data () {
         return {
             tool: {
-                'session': {
+                'network': {
                     showing: false,
-                    cb: this.showSession
+                    cb: this.showNetwork
                 },
 
                 'clear': {
@@ -74,7 +73,7 @@ export default {
 
                 'vorlon': {
                     showing: true,
-                    cb: this.showVorlon
+                    cb: this.activeVorlon
                 },
 
                 'online': {
@@ -93,11 +92,12 @@ export default {
 
             httpsCAData: '',
 
-            activeView: 'session'
+            activeView: 'network'
         }
     },
 
     computed: {
+        // https://zhenyong.github.io/vuex/forms.html
         interceptHttps: {
             get () {
                 return this.uiconfig.interceptHttps
@@ -107,13 +107,11 @@ export default {
                 this.toggleEnableHttps(newVal)
             }
         },
-
         ...mapGetters(['uiconfig'])
     },
 
     components: {
-        Session,
-        Vorlon,
+        Network,
         Alert,
         Modal,
         Qrcode
@@ -132,21 +130,15 @@ export default {
             this.onlineModal = true
         },
 
-        showSession () {
-            this.activeView = 'session'
+        showNetwork () {
+            this.activeView = 'network'
 
-            this.tool['session'].showing = false
+            this.tool.network.showing = false
 
-            this.tool['clear'].showing = true
+            this.tool.clear.showing = true
         },
 
-        showVorlon () {
-            this.activeView = 'vorlon'
-
-            this.tool['session'].showing = true
-
-            this.tool['clear'].showing = false
-        },
+        activeVorlon () {},
 
         ...mapActions([
             'addSession',

@@ -35,6 +35,7 @@
             text-align: center;
 
             li {
+                position: relative;
                 display: block;
                 padding: 0 20px;
                 border-right: 1px solid #717171;
@@ -45,6 +46,17 @@
                 &.active,
                 &:hover {
                     background: #fff;
+                }
+
+                &.editing {
+                    &::after {
+                        position: absolute;
+                        content: '*';
+                        width: 20px;
+                        height: 20px;
+                        color: #f00;
+                        text-align: center;
+                    }
                 }
             }
         }

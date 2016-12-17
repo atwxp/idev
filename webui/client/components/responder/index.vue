@@ -59,7 +59,6 @@
 import RuleItem from 'components/rule-item'
 
 import { mapActions } from 'vuex'
-import { mapGetters } from 'vuex'
 
 export default {
     data () {
@@ -92,7 +91,7 @@ export default {
     computed: {
         enableRule: {
             get () {
-                return this.uiconfig.enableRule
+                return this.$store.state.uiconfig.enableRule
             },
 
             set (newVal) {
@@ -101,10 +100,8 @@ export default {
         },
 
         ruleList () {
-            return this.uiconfig.ruleList
-        },
-
-        ...mapGetters(['uiconfig'])
+            return this.$store.state.uiconfig.ruleList
+        }
     },
 
     methods: {

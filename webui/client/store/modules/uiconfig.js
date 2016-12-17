@@ -3,7 +3,8 @@ import * as types from 'store/mutation-types'
 const state = {
     enableRule: false,
     interceptHttps: false,
-    ruleList: []
+    ruleList: [],
+    vorlon: []
 }
 
 const getters = {
@@ -43,6 +44,10 @@ const mutations = {
         state.ruleList = (state.ruleList || []).filter((r) => {
             return r.id !== idx
         })
+    },
+
+    [types.UPDATE_VORLON] (state, val) {
+        state.vorlon = val
     }
 }
 
@@ -69,6 +74,10 @@ const actions = {
 
     deleteRule ({commit, state}, idx) {
         commit(types.DELETE_RULE, idx)
+    },
+
+    updateVorlon ({commit}, val) {
+        commit(types.UPDATE_VORLON, val)
     }
 }
 

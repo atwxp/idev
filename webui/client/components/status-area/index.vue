@@ -2,7 +2,7 @@
 <div class="status-area">
     <div class="status-bar">
         <ul>
-            <li v-for="t in tab" @click="activeId = t.id" v-bind:class="{active: activeId == t.id}">{{t.text | camelCase}}</li>
+            <li v-for="t in tab" @click="activeId = t.id" :class="{active: activeId == t.id,'editing':t.editing}">{{t.text | camelCase}}</li>
         </ul>
     </div>
 
@@ -19,6 +19,7 @@ import inspector from 'components/inspector'
 import responder from 'components/responder'
 import composer from 'components/composer'
 import wizard from 'components/wizard'
+import Vorlon from 'components/vorlon'
 
 export default {
     data () {
@@ -44,6 +45,12 @@ export default {
                     id: 3,
                     view: 'wizard',
                     text: 'text-wizard'
+                },
+                {
+                    id: 4,
+                    view: 'vorlon',
+                    text: 'vorlon',
+                    editing: false
                 }
             ],
 
@@ -51,11 +58,20 @@ export default {
         }
     },
 
+    created () {
+        window.bus.$on('codeChange', (v) => {
+            this.tab.forEach((t) => {
+                t.editing = t.view === 'vorlon' && v
+            })
+        })
+    },
+
     components: {
         inspector,
         responder,
         composer,
-        wizard
+        wizard,
+        Vorlon
     }
 };
 </script>

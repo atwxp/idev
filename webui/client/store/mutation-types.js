@@ -15,3 +15,5 @@ export const ADD_RULE = 'ADD_RULE'
 export const UPDATE_RULE = 'UPDATE_RULE'
 
 export const DELETE_RULE = 'DELETE_RULE'
+
+export const UPDATE_VORLON = 'UPDATE_VORLON'
