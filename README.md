@@ -44,9 +44,15 @@ A Web Debugger Proxy Like Fiddler.
 
 ## WebUI
 
-![](./ui.png)
+![](./images/ui.png)
+
+## Doc
+
+[idev wiki](https://github.com/atwxp/idev/wiki)
 
 ## Todos
+
+- embed vorlon
 
 - clear 304 cache
 
