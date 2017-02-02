@@ -21,7 +21,7 @@
     </modal>
 
     <modal :showing.sync="httpsModal" cls="https-modal" v-on:close="httpsModal=false">
-        <qrcode cls="qrcode-row" :value="httpsCAData" size="270"></qrcode>
+        <qrcode cls="qrcode-row" :value="httpsCAData" :size="270"></qrcode>
 
         <div class="intercept-row">
             <input type="checkbox" name="itercept" id="intercept" v-model="interceptHttps" />
@@ -39,7 +39,7 @@ import socketClient from 'socket.io-client'
 import Network from 'components/session'
 import Alert from 'ui/alert'
 import Modal from 'ui/modal'
-import Qrcode from 'v-qrcode/src/index'
+import Qrcode from 'v-qrcode'
 
 import { mapActions } from 'vuex'
 import { mapGetters } from 'vuex'
