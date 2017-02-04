@@ -1,3 +1,8 @@
+/**
+ * @file   client entry
+ * @author wxp201013@163.com
+ */
+
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 

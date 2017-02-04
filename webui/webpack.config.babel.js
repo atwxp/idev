@@ -1,3 +1,8 @@
+/**
+ * @file   webpack config entry
+ * @author wxp201013@163.com
+ */
+
 'use strict'
 
 import path from 'path'
@@ -6,18 +11,16 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
 const abs = (...values) => {
-    let p = [__dirname].concat(values);
+    let p = [__dirname].concat(values)
 
-    return path.resolve.apply(null, p);
-};
+    return path.resolve.apply(null, p)
+}
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production'
 
-const srcPath = abs('client');
+const srcPath = abs('client')
 
-const outputPath = abs('output');
-
-const assetsPath = isProduction ? '' : '/static/';
+const outputPath = abs('output')
 
 export default {
     context: srcPath,
@@ -108,6 +111,7 @@ export default {
     },
 
     plugins: (function () {
+        /* eslint-disable */
         return (isProduction
             ? [
                 new webpack.optimize.UglifyJsPlugin({
@@ -126,7 +130,8 @@ export default {
                 new HtmlWebpackPlugin({
                     template: 'index.html'
                 })
-            ]);
+            ])
+        /* eslint-enable */
     })(),
 
     // https://github.com/vuejs/vue/wiki/Vue-2.0-RC-Starter-Resources
@@ -139,4 +144,4 @@ export default {
 
         extensions: ['', '.vue', '.js']
     }
-};
+}

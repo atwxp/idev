@@ -1,3 +1,8 @@
+/**
+ * @file   vuex const
+ * @author wxp201013@163.com
+ */
+
 export const ADD_SESSION = 'ADD_SESSION'
 
 export const CLEAR_SESSION = 'CLEAR_SESSION'

@@ -1,5 +1,11 @@
+/**
+ * @file   webpack dev config entry
+ * @author wxp201013@163.com
+ */
+
 import webpack from 'webpack'
-import webpackDevServer from 'webpack-dev-server'
+import WebpackDevServer from 'webpack-dev-server'
+
 import webpackConfig from './webpack.config.babel'
 
 import config from '../lib/config'
@@ -11,7 +17,7 @@ export default function () {
 
     webpackConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:' + port + '/')
 
-    new webpackDevServer(compiler, {
+    new WebpackDevServer(compiler, {
         contentBase: 'webui/output/',
 
         publicPath: '/',
@@ -23,6 +29,6 @@ export default function () {
             colors: true
         }
     }).listen(port, function () {
-        console.log('Bundling project, please wait...');
-    });
-};
+        console.log('Bundling project, please wait...')
+    })
+}

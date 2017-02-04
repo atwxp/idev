@@ -1,15 +1,22 @@
-import Vue from 'vue'
-import overlayCom from './index'
-import util from 'util'
+/**
+ * @file   show close manager
+ * @author wxp201013@163.com
+ */
 
-const Overlay = Vue.extend(overlayCom);
+import Vue from 'vue'
+
+import * as util from 'util'
+
+import overlayCom from './index'
+
+const Overlay = Vue.extend(overlayCom)
 
 export default {
     instances: [],
 
     overlay: false,
 
-    open (instance) {
+    open(instance) {
         if (!instance && this.instances.indexOf(instance) !== -1) {
             return
         }
@@ -25,7 +32,7 @@ export default {
         instance.$el.style.zIndex = util.getZIndex(this.overlay.zIndex)
     },
 
-    close (instance) {
+    close(instance) {
         let index = this.instances.indexOf(instance)
 
         if (index === -1) {
@@ -42,7 +49,7 @@ export default {
         });
     },
 
-    showLay (color) {
+    showLay(color) {
         let overlay = this.overlay = new Overlay({
             el: document.createElement('div')
         })
@@ -54,10 +61,11 @@ export default {
         document.body.appendChild(overlay.$el)
 
         this.bodyOverflow = util.getStyle(document.body, 'overflow')
-        document.body.style.overflow = 'hidden';
+
+        document.body.style.overflow = 'hidden'
     },
 
-    closeLay () {
+    closeLay() {
         if (!this.overlay) {
             return
         }
@@ -73,7 +81,7 @@ export default {
         })
     },
 
-    changeLayStyle () {
+    changeLayStyle() {
         if (!this.overlay || !this.instances.length) {
             return
         }
@@ -83,7 +91,7 @@ export default {
         this.overlay.color = instance.color
     },
 
-    handleOverlayClick () {
+    handleOverlayClick() {
         if (!this.instances.length) {
             return
         }

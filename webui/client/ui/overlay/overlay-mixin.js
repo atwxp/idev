@@ -1,43 +1,51 @@
-import manager from './manager';
+/**
+ * @file   overlay mixin
+ * @author wxp201013@163.com
+ */
+
+import manager from './manager'
 
 export default {
     props: {
         showing: {
-            type: Boolean,
-            default: false
+            'type': Boolean,
+
+            'default': false
         },
 
         overlay: {
-            type: Boolean,
-            default: true
+            'type': Boolean,
+
+            'default': true
         },
 
         color: {
-            type: String,
-            default: 'rgba(0, 0, 0, .5)'
+            'type': String,
+
+            'default': 'rgba(0, 0, 0, .5)'
         }
     },
 
-    mounted () {
+    mounted() {
         this.$nextTick(() => {
             if (this.showing && this.overlay) {
                 manager.open(this)
             }
-        });
+        })
     },
 
-    // beforeDestroy () {
+    // beforeDestroy() {
     //     manager.close(this)
     // },
 
-    destroyed () {
+    destroyed() {
         this.$nextTick(() => {
             manager.close(this)
-        });
+        })
     },
 
     watch: {
-        showing (val) {
+        showing(val) {
             if (val && this.overlay) {
                 manager.open(this)
             }

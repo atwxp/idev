@@ -1,10 +1,16 @@
+/**
+ * @file   vuex entry
+ * @author wxp201013@163.com
+ */
+
 import Vue from  'vue'
 import Vuex from 'vuex'
 
 import * as actions from './actions'
 import * as getters from './getters'
-import session from './modules/session'
-import uiconfig from './modules/uiconfig'
+
+import * as session from './modules/session'
+import * as uiconfig from './modules/uiconfig'
 
 Vue.use(Vuex)
 

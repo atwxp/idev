@@ -1,5 +1,9 @@
+/**
+ * @file   server controller
+ * @author wxp201013@163.com
+ */
+
 import fse from 'fs-extra'
-import util from 'util'
 import path from 'path'
 import multiparty from 'multiparty'
 
@@ -19,12 +23,12 @@ export const getFilePath = (req, res, next) => {
     // Errors may be emitted
     // Note that if you are listening to 'part' events, the same error may be
     // emitted from the `form` and the `part`.
-    form.on('error', (err) => {
+    form.on('error', err => {
         console.log('Error parsing form: ' + err.stack)
     })
 
     // Parts are emitted when parsing the form
-    form.on('part', (part) => {
+    form.on('part', part => {
         // You *must* act on the part by reading it
         // NOTE: if you want to ignore it, just call "part.resume()"
         if (!part.filename) {
@@ -37,15 +41,13 @@ export const getFilePath = (req, res, next) => {
 
         if (part.filename) {
             // filename is defined when this is a file
-            count++;
-
             console.log('got file named ' + part.name)
 
             // ignore file's content here
             part.resume()
         }
 
-        part.on('error', (err) => {})
+        part.on('error', function (err) {})
     })
 
     form.on('file', (name, file) => {
@@ -81,7 +83,7 @@ export const getUiConfig = (req, res, next) => {
 
     fse.ensureFileSync(uiConfigFilePath)
 
-    let uiConfig = fse.readJsonSync(uiConfigFilePath, {throws: false})
+    let uiConfig = fse.readJsonSync(uiConfigFilePath, {'throws': false})
 
     uiConfig = Object.assign(uiConfig || {}, {
         uiport: config.uiport

@@ -1,9 +1,14 @@
-import util from 'util'
+/**
+ * @file   vue filter
+ * @author wxp201013@163.com
+ */
+
+import {capitalize, camelCase} from 'util'
 
 export default function (vue) {
-    vue.filter('capitalize', util.capitalize)
+    vue.filter('capitalize', capitalize)
 
-    vue.filter('camelCase', function () {
-        return util.camelCase.apply(null, arguments)
-    });
-};
+    vue.filter('camelCase', function (...string) {
+        return camelCase.apply(null, string)
+    })
+}

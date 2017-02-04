@@ -27,7 +27,7 @@
 
 <script>
 
-import overlayMixin from 'ui/overlay/overlay-mixin';
+import overlayMixin from 'ui/overlay/overlay-mixin'
 
 export default {
     mixins: [overlayMixin],

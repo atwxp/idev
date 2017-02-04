@@ -14,7 +14,7 @@
 
 <script>
 
-import modal from 'ui/modal';
+import modal from 'ui/modal'
 
 export default {
     props: {

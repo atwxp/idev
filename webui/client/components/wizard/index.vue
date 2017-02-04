@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import util from 'util'
+import * as util from 'util'
 
 export default {
     data () {

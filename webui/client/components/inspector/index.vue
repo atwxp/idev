@@ -73,7 +73,7 @@ import { mapGetters } from 'vuex'
 
 import InspectorTable from 'components/inspector-table'
 
-import util from 'util'
+import * as util from 'util'
 
 export default {
     data () {

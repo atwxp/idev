@@ -1,0 +1,19 @@
+{
+    "eslint": {
+        "env": {
+        },
+
+        "globals": {
+        },
+
+        "rules": {
+            "no-console": 0,
+            "semi": ["always", { "omitLastInOneLineBlock": true }]
+        }
+    },
+
+    "htmlcs": {
+        "ie-edge": false,
+        "max-len": 120
+    }
+}
